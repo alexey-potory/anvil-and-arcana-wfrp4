@@ -5,9 +5,10 @@ import { ItemDocument } from "../foundry/entities/item-document";
 import { EventUtils } from "../foundry/utils/event-utils";
 import { OnDropEvent } from "../foundry/events/on-drop-event";
 import { NotificationUtils } from "../foundry/utils/notifications-utils";
-import { DocumentUtils } from "../foundry/utils/document-utils";
+import { ItemsUtils } from "../foundry/utils/items-utils";
 import { LocalizationUtils } from "../foundry/utils/localization-utils";
 import { ObjectsUtils } from "../foundry/utils/objects-utils";
+import { SearchStringUtils } from "../utils/search-utils";
 
 interface DropEventData {
     uuid: string;
@@ -82,7 +83,7 @@ export class CraftingApplication extends Application {
         }
 
         if (item.system.quantity.value > 0) {
-            await DocumentUtils.updateItemCount(item, item.system.quantity.value - 1);
+            await ItemsUtils.updateCount(item, item.system.quantity.value - 1);
         } else {
             return NotificationUtils.warning(LocalizationUtils.localize('...'));
         }
@@ -95,15 +96,17 @@ export class CraftingApplication extends Application {
         const index = EventUtils.getAttributeData<number>(event, "index");
 
         const item = this.items[index];
-        await DocumentUtils.updateItemCount(item, item.system.quantity.value + 1);
+        await ItemsUtils.updateCount(item, item.system.quantity.value + 1);
 
         this.items.splice(index, 1);
         this.render(true);
     }
 
     async _onSubmit() {
-        // TODO: Finish submit function
-        console.log("On Submit");
+        const items = this.items.map(item => ItemsUtils.findPrototypeByName(item));
+        const searchString = SearchStringUtils.createSearchString(items);
+
+        // TODO: Recipe search and apply
     }
 
     render(force: boolean = false) {

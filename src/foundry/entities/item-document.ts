@@ -1,4 +1,5 @@
 export interface ItemDocument {
+    _id: string;
     name: string;
     system: {
         quantity: {
