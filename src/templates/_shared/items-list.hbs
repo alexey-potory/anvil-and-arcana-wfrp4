@@ -1,0 +1,15 @@
+{{#each items as |item i|}}
+<li class="craft-item" data-index="{{i}}" data-id="{{item.id}}" data-item-id="{{item.id}}">
+    <div class="item-content">
+        <div class="item-body">
+            <div class="item-icon" style="background-image: url({{item.img}})"></div>
+            <a>{{item.name}}</a>
+        </div>
+        <div class="item-controls">
+            <a class="item-control item-delete" title="{{localize 'SHEET.DeleteItem'}}">
+                <i class="fas fa-trash"></i>
+            </a>
+        </div>
+    </div>
+</li>
+{{/each}}

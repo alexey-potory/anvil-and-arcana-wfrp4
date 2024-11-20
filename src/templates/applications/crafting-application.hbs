@@ -1,0 +1,19 @@
+<div class="root content">
+    <div class="header">
+        <span>Header</span>
+    </div>
+    <div class="items-section">
+        <ol class="items-list">
+            {{#unless items.length}}
+            <div class="items-placeholder">
+                <p>Placeholder</p>
+            </div>
+            {{/unless}}
+            {{> modules/anvil-and-arcana-wfrp4/templates/_shared/items-list.hbs items=items}}
+        </ol>
+    </div>
+
+    {{#if items.length}}
+        <button id="submit" class="trigger-script">Process</button>
+    {{/if}}
+</div>
