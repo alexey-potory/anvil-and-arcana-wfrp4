@@ -1,0 +1,34 @@
+<header class="item-header">
+    <h1>
+        <input name="name" class="item-header item-name" type="text" value="{{item.name}}" placeholder="{{localize 'Name'}}"/>
+    </h1>
+</header>
+
+<img class="item-image" src="{{item.img}}" data-edit="img"  />
+
+<div class="item-details">
+    <label class="label-text">{{localize "Type"}}</label>
+    <div class="input-box category input-container">
+        {{localize category}}
+    </div>
+</div>
+
+<div class="item-details">
+    <label class="label-text">{{localize "ANVIL_AND_ARCANA.Recipe.SelectedSkill"}}</label>
+    <div class="input-container">
+        <select name="system.check.skill">
+            {{#selectOptions check.skills selected=check.selectedSkill}}
+            {{/selectOptions}}
+        </select>
+    </div>
+</div>
+
+<div class="item-details">
+    <label class="label-text">{{localize "ANVIL_AND_ARCANA.Recipe.CheckTypeLabel"}}</label>
+    <div class="input-container">
+        <select name="system.check.type">
+            {{#selectOptions check.checkTypes selected=check.selectedType}}
+            {{/selectOptions}}
+        </select>
+    </div>
+</div>

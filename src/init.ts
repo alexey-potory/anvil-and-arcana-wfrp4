@@ -19,7 +19,14 @@ HooksUtils.onInit(() => {
     // Loading common templates
 
     const templatePaths = [
-        `${Contracts.modulePath}/templates/_shared/items-list.hbs`
+
+        // Shared
+        `${Contracts.modulePath}/templates/_shared/items-list.hbs`,
+
+        // Recipe sheet
+        `${Contracts.modulePath}/templates/sheets/recipe/craft-recipe-sheet.hbs`,
+        `${Contracts.modulePath}/templates/sheets/recipe/craft-recipe-header.hbs`,
+        
     ];
 
     TemplateUtils.load(templatePaths);

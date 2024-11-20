@@ -1,0 +1,15 @@
+{
+    "TYPES.Item.anvil-and-arcana-wfrp4.recipe": "Craft Recipe",
+
+    "ANVIL_AND_ARCANA.Skills.Alchemy": "Alchemyst",
+    "ANVIL_AND_ARCANA.Skills.Apothecary": "Apothecary",
+
+    "ANVIL_AND_ARCANA.Check.Type.Simple": "Simple",
+    "ANVIL_AND_ARCANA.Check.Type.Extended": "Extended",
+
+    "ANVIL_AND_ARCANA.Recipe.SelectedSkill": "Skill",
+    "ANVIL_AND_ARCANA.Recipe.CheckTypeLabel": "Check Type",
+    "ANVIL_AND_ARCANA.Recipe.CheckType.Simple": "Simple",
+    "ANVIL_AND_ARCANA.Recipe.CheckType.Extended": "Extended",
+    "ANVIL_AND_ARCANA.Recipe.ExtendedCheck.SL": "SL"
+}

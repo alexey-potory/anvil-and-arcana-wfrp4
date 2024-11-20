@@ -1,5 +1,6 @@
 import { DocumentsUtils } from "../foundry/utils/documents-utils";
 import { SchemaUtils } from "../foundry/utils/schema-utils";
+import { SkillsUtils } from "../utils/skills-utils";
 
 interface CraftRecipeData {
     img: string;
@@ -56,6 +57,9 @@ export class CraftRecipeModel extends BaseItemModel {
     }
 
     _initializeSystem() {
+        const skills = SkillsUtils.all();
+        const skillKey = Object.keys(skills)[0];
+
         DocumentsUtils.updateSource(
             //@ts-ignore
             this.parent, {
@@ -63,7 +67,7 @@ export class CraftRecipeModel extends BaseItemModel {
                     check:
                         {
                             type: "Simple",
-                            skill: "TRADE.Skills.Alchemy",
+                            skill: skillKey,
                             simple: {
                                 modifier: 0
                             },

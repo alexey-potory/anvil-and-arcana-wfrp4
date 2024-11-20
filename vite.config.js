@@ -34,6 +34,7 @@ function moduleCopyPlugin() {
 
                 copySrcFolder('src/templates');
                 copySrcFolder('src/styles');
+                copySrcFolder('src/lang');
 
                 const modulesPath = path.join(process.env.LOCALAPPDATA, '/FoundryVTT/Data/modules/anvil-and-arcana-wfrp4');
 

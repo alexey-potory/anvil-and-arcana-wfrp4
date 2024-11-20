@@ -12,6 +12,11 @@ export class ItemsUtils {
         return game.items.find(func);
     }
 
+    static get<T>(id: string) : T {
+        // @ts-ignore
+        return game.items.get(id);
+    }
+
     static findPrototypeByName<T>(sourceItem: T) : T {
         // @ts-ignore
         return game.items.find(item => item.name === sourceItem.name);
