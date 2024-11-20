@@ -32,3 +32,30 @@
         </select>
     </div>
 </div>
+
+{{#ifEquals item.system.check.type "Simple"}}
+    <div class="item-details">
+        <label class="label-text">{{localize "ANVIL_AND_ARCANA.Recipe.ModifierLabel"}}</label>
+        <div class="input-box category input-container">
+            <input name="system.check.simple.modifier" value="{{item.system.check.simple.modifier}}" class="input-details" style="width: 100%;text-align: center;margin-top: -5px;background: none;box-shadow: none !important;border: none;" placeholder="{{localize "ANVIL_AND_ARCANA.Recipe.ModifierPlaceholder"}}"/>
+        </div>
+    </div>
+{{/ifEquals}}
+
+{{#ifEquals item.system.check.type "Extended"}}
+    <div class="item-details">
+        <label class="label-text">{{localize "ANVIL_AND_ARCANA.Recipe.ModifierLabel"}}</label>
+        <div class="input-container">
+            <select name="system.check.extended.difficulty">
+                {{#selectOptions check.extended.allDifficulties selected=check.extended.selectedDifficulty}}
+                {{/selectOptions}}
+            </select>
+        </div>
+    </div>
+    <div class="item-details">
+        <label class="label-text">{{localize "ANVIL_AND_ARCANA.Recipe.ExtendedCheck.SL"}}</label>
+        <div class="input-box category input-container">
+            <input name="system.check.extended.sl" value="{{item.system.check.extended.sl}}" class="input-details" style="width: 100%;text-align: center;margin-top: -5px;background: none;box-shadow: none !important;border: none;" placeholder="{{localize "ANVIL_AND_ARCANA.Recipe.ExtendedCheck.SL"}}"/>
+        </div>
+    </div>
+{{/ifEquals}}

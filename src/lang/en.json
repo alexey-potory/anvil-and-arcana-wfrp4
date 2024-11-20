@@ -11,5 +11,7 @@
     "ANVIL_AND_ARCANA.Recipe.CheckTypeLabel": "Check Type",
     "ANVIL_AND_ARCANA.Recipe.CheckType.Simple": "Simple",
     "ANVIL_AND_ARCANA.Recipe.CheckType.Extended": "Extended",
-    "ANVIL_AND_ARCANA.Recipe.ExtendedCheck.SL": "SL"
+    "ANVIL_AND_ARCANA.Recipe.ExtendedCheck.SL": "SL",
+    "ANVIL_AND_ARCANA.Recipe.ModifierLabel": "Diff.Mod.",
+    "ANVIL_AND_ARCANA.Recipe.ModifierPlaceholder": "Modifier"
 }
