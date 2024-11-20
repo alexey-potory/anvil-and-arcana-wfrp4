@@ -1,8 +1,8 @@
-import {CraftingApplication} from "./windows/crafting-application";
+import {CraftApplication} from "./ui/applications/craft-application";
 
 
 export interface ModuleApplications {
-    crafting?: CraftingApplication;
+    crafting?: CraftApplication;
 }
 
 export class ModuleRoot {

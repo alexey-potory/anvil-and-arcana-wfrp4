@@ -1,9 +1,23 @@
 import { Contracts, ModuleRoot} from "./contracts";
+import { CustomTypeUtils } from "./foundry/utils/custom-type-utils";
 import { HooksUtils } from "./foundry/utils/hooks-utils";
 import { TemplateUtils } from "./foundry/utils/template-utils";
-import { CraftingApplication} from "./windows/crafting-application";
+import { CraftRecipeModel } from "./models/craft-recipe-model";
+import { CraftApplication} from "./ui/applications/craft-application";
+import { CraftRecipeSheet } from "./ui/sheets/craft-recipe-sheet";
 
 HooksUtils.onInit(() => {
+
+    // Loading custom item types
+
+    CustomTypeUtils.register(
+        `${Contracts.moduleName}.recipe`,
+        CraftRecipeModel,
+        CraftRecipeSheet
+    );
+
+    // Loading common templates
+
     const templatePaths = [
         `${Contracts.modulePath}/templates/_shared/items-list.hbs`
     ];
@@ -13,7 +27,7 @@ HooksUtils.onInit(() => {
 
 HooksUtils.onReady(() => {
     const root: ModuleRoot = new ModuleRoot({
-        crafting: new CraftingApplication(),
+        crafting: new CraftApplication(),
     });
 
     Contracts.root = root;

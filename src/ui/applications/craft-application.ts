@@ -1,14 +1,14 @@
-import { Contracts } from "../contracts";
-import { OnTargetedEvent } from "../foundry/events/on-target-event";
-import { getItemByUuid} from "../documents/utils";
-import { ItemDocument } from "../foundry/entities/item-document";
-import { EventUtils } from "../foundry/utils/event-utils";
-import { OnDropEvent } from "../foundry/events/on-drop-event";
-import { NotificationUtils } from "../foundry/utils/notifications-utils";
-import { ItemsUtils } from "../foundry/utils/items-utils";
-import { LocalizationUtils } from "../foundry/utils/localization-utils";
-import { ObjectsUtils } from "../foundry/utils/objects-utils";
-import { SearchStringUtils } from "../utils/search-utils";
+import { Contracts } from "../../contracts";
+import { OnTargetedEvent } from "../../foundry/events/on-target-event";
+import { getItemByUuid} from "../../documents/utils";
+import { ItemDocument } from "../../foundry/entities/item-document";
+import { EventUtils } from "../../foundry/utils/event-utils";
+import { OnDropEvent } from "../../foundry/events/on-drop-event";
+import { NotificationUtils } from "../../foundry/utils/notifications-utils";
+import { ItemsUtils } from "../../foundry/utils/items-utils";
+import { LocalizationUtils } from "../../foundry/utils/localization-utils";
+import { ObjectsUtils } from "../../foundry/utils/objects-utils";
+import { SearchStringUtils } from "../../utils/search-string-utils";
 
 interface DropEventData {
     uuid: string;
@@ -18,7 +18,7 @@ interface DropEventData {
 interface GameItem extends ItemDocument { }
 
 // @ts-ignore
-export class CraftingApplication extends Application {
+export class CraftApplication extends Application {
 
     items: GameItem[];
 
