@@ -33,6 +33,13 @@ HooksUtils.onInit(() => {
 });
 
 HooksUtils.onReady(() => {
+
+    // @ts-ignore
+    Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
+        //@ts-ignore
+        return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+    });
+
     const root: ModuleRoot = new ModuleRoot({
         crafting: new CraftApplication(),
     });
