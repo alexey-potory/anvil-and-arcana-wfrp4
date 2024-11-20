@@ -1,15 +1,17 @@
-import {Contracts, ModuleRoot} from "./contracts";
-import {CraftingApplication} from "./windows/crafting-application";
+import { Contracts, ModuleRoot} from "./contracts";
+import { HooksUtils } from "./foundry/utils/hooks-utils";
+import { TemplateUtils } from "./foundry/utils/template-utils";
+import { CraftingApplication} from "./windows/crafting-application";
 
-Hooks.on("init", () => {
+HooksUtils.onInit(() => {
     const templatePaths = [
         `${Contracts.modulePath}/templates/_shared/items-list.hbs`
     ];
 
-    loadTemplates(templatePaths);
+    TemplateUtils.load(templatePaths);
 });
 
-Hooks.once('ready', () => {
+HooksUtils.onReady(() => {
     const root: ModuleRoot = new ModuleRoot({
         crafting: new CraftingApplication(),
     });
