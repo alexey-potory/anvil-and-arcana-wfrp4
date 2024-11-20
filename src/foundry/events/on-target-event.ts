@@ -1,3 +1,3 @@
-export type OnTargetedEvent = {
+export interface OnTargetedEvent {
     target: any;
 };
