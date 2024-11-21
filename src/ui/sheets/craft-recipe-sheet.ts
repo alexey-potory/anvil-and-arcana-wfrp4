@@ -4,6 +4,7 @@ import { DropEventData } from "../../foundry/events/drop-event-data";
 import { OnDropEvent } from "../../foundry/events/on-drop-event";
 import { getDocumentByUuid } from "../../foundry/utils/documents-utils";
 import { getDropEventData } from "../../foundry/utils/event-utils";
+import { EventWithDataTarget, getDataAttribute } from "../../foundry/utils/html-utils";
 import { findItem, getItem, updateItem } from "../../foundry/utils/items-utils";
 import { localizeString } from "../../foundry/utils/localization-utils";
 import { showWarning } from "../../foundry/utils/notifications-utils";
@@ -36,10 +37,19 @@ interface CraftRecipeCheck {
     };
 }
 
+interface RecipeDocument extends ItemDocument {
+    system: {
+        components: string[]
+        quantity: {
+            value: number
+        }
+    };
+}
+
 // @ts-ignore
 export class CraftRecipeSheet extends ItemSheetWfrp4e {
 
-    currentData: ItemDocument | undefined;
+    currentData: RecipeDocument | undefined;
 
     constructor(item:any, options:any) {
         super(item, options);
@@ -61,8 +71,8 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         html.find('#fail-result').on('drop', this._onFailDrop.bind(this));
         html.find("#fail-result-remove").click(this._onFailResultRemove.bind(this));
 
-        // html.find('#ingredients-list').on('drop', this._onIngredientAdd.bind(this));
-        // html.find(".ingredient-delete").click(this._onIngredientDelete.bind(this));
+        html.find('#components-list').on('drop', this._onComponentsDrop.bind(this));
+        html.find(".item-remove").click(this._onComponentRemove.bind(this));
     }
 
     async getData(options: any) {
@@ -138,16 +148,45 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         await this._updateResult(ResultType.Fail, item._id);
     }
 
-    async _onSuccessResultRemove(event: OnDropEvent) {
+    async _onComponentsDrop(event: OnDropEvent) {
+
+        if (!this.currentData) {
+            throw Error(localizeString('...'));
+        }
+
         event.preventDefault();
-        
+
+        const item = await this._getDropItem(event);
+
+        if (!item) {
+            return;
+        }
+
+        const components = this.currentData.system.components || [];
+
+        components.push(item._id);
+        await updateItem(this.currentData, "system.components", components);
+    }
+
+    async _onSuccessResultRemove() {
         await this._updateResult(ResultType.Success, '');
     }
 
-    async _onFailResultRemove(event: OnDropEvent) {
-        event.preventDefault();
-
+    async _onFailResultRemove() {
         await this._updateResult(ResultType.Fail, '');
+    }
+
+    async _onComponentRemove(event: EventWithDataTarget) {
+
+        if (!this.currentData) {
+            throw Error(localizeString('...'));
+        }
+
+        const index = Number(getDataAttribute(event, 'index'));
+        const components = this.currentData.system.components || [];
+
+        components.splice(index, 1);
+        await updateItem(this.currentData, "system.components", components);
     }
 
     async _getDropItem(event: OnDropEvent) : Promise<ItemDocument | undefined> {
