@@ -16,7 +16,7 @@ export class CraftApplication extends Application {
 
     items: ItemDocument[];
 
-    constructor(options = {}) {
+    constructor(options:any) {
         super();
         this.items = [];
     }
