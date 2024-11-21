@@ -1,7 +1,7 @@
 {
     "TYPES.Item.anvil-and-arcana-wfrp4.recipe": "Craft Recipe",
 
-    "ANVIL_AND_ARCANA.Skills.Alchemy": "Alchemyst",
+    "ANVIL_AND_ARCANA.Skills.Alchemy": "Alchemy",
     "ANVIL_AND_ARCANA.Skills.Apothecary": "Apothecary",
 
     "ANVIL_AND_ARCANA.Check.Type.Simple": "Simple",
@@ -19,5 +19,21 @@
     "ANVIL_AND_ARCANA.Recipe.FailResult.Header": "Failure Result",
     "ANVIL_AND_ARCANA.Recipe.FailResult.Placeholder": "Add an item for a failure result...",
     "ANVIL_AND_ARCANA.Recipe.Components.Header": "Components",
-    "ANVIL_AND_ARCANA.Recipe.Components.Placeholder": "Add components..."
+    "ANVIL_AND_ARCANA.Recipe.Components.Placeholder": "Add components...",
+
+    "ANVIL_AND_ARCANA.Chat.Speaker": "Crafting",
+    "ANVIL_AND_ARCANA.Chat.Messages.BadRecipe": "It seems these ingredients cannot create a meaningful combination. Maybe try something else?",
+
+    "ANVIL_AND_ARCANA.Dialogs.SelectRecipe.Header": "Select recipe",
+    "ANVIL_AND_ARCANA.Dialogs.SelectRecipe.Submit": "OK",
+    "ANVIL_AND_ARCANA.Dialogs.SelectRecipe.Cancel": "Cancel",
+    
+    "ANVIL_AND_ARCANA.Dialogs.SelectActor.Header": "Select actor",
+    "ANVIL_AND_ARCANA.Dialogs.SelectActor.Submit": "OK",
+    "ANVIL_AND_ARCANA.Dialogs.SelectActor.Cancel": "Cancel",
+
+    "ANVIL_AND_ARCANA.Errors.NoAvailableCharacter": "No available charcter present",
+
+    "ANVIL_AND_ARCANA.Settings.AllowCraftWithoutGM.Name": "Allow craft without GM",
+    "ANVIL_AND_ARCANA.Settings.AllowCraftWithoutGM.Hint": "Allow players to create items via crafting system when GM is not present"
 }

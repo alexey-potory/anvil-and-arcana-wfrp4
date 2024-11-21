@@ -1,3 +1,4 @@
+import { Contracts, recipeIconPath } from "../contracts";
 import { updateDocumentSource } from "../foundry/utils/documents-utils";
 import { schemaFields } from "../foundry/utils/schema-utils";
 import { getModuleSkills } from "../utils/skills-utils";
@@ -53,7 +54,7 @@ export class CraftRecipeModel extends BaseItemModel {
         }
 
         if (!data.img || data.img == "icons/svg/item-bag.svg") {
-            this._updateImage("modules/useful-alchemistry-wfrp4/art/icons/craft-recipe-icon.png");
+            this._updateImage(recipeIconPath);
         }
     }
 

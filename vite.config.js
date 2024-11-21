@@ -32,6 +32,7 @@ function moduleCopyPlugin() {
 
                 copySrcFile('src/module.json');
 
+                copySrcFolder('src/art');
                 copySrcFolder('src/templates');
                 copySrcFolder('src/styles');
                 copySrcFolder('src/lang');

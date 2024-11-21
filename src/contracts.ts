@@ -1,5 +1,9 @@
 import {CraftApplication} from "./ui/applications/craft-application";
 
+export const moduleName = "anvil-and-arcana-wfrp4";
+export const modulePath = `modules/${moduleName}`
+
+export const recipeIconPath = `${modulePath}/art/icons/craft-recipe-icon.png`
 
 export interface ModuleApplications {
     crafting?: CraftApplication;
@@ -22,13 +26,5 @@ export class Contracts {
     static set root(root: ModuleRoot) {
         // @ts-ignore
         game.anvilAndArcana = root;
-    }
-
-    static get moduleName() {
-        return "anvil-and-arcana-wfrp4";
-    }
-
-    static get modulePath() {
-        return `modules/${this.moduleName}`;
     }
 }

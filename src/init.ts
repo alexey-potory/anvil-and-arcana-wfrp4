@@ -1,6 +1,8 @@
-import { Contracts, ModuleRoot} from "./contracts";
+import { Contracts, moduleName, modulePath, ModuleRoot} from "./contracts";
 import { registerCustomType } from "./foundry/utils/custom-type-utils";
 import { onInitHook, onReadyHook } from "./foundry/utils/hooks-utils";
+import { localizeString } from "./foundry/utils/localization-utils";
+import { registerSetting } from "./foundry/utils/settings-utils";
 import { loadHandlebarsTemplates } from "./foundry/utils/template-utils";
 import { CraftRecipeModel } from "./models/craft-recipe-model";
 import { CraftApplication} from "./ui/applications/craft-application";
@@ -11,7 +13,7 @@ onInitHook(() => {
     // Loading custom item types
 
     registerCustomType(
-        `${Contracts.moduleName}.recipe`,
+        `${moduleName}.recipe`,
         CraftRecipeModel,
         CraftRecipeSheet
     );
@@ -21,16 +23,29 @@ onInitHook(() => {
     const templatePaths = [
 
         // Shared
-        `${Contracts.modulePath}/templates/_shared/items-list.hbs`,
+        `${modulePath}/templates/_shared/items-list.hbs`,
 
         // Recipe sheet
-        `${Contracts.modulePath}/templates/sheets/recipe/craft-recipe-sheet.hbs`,
-        `${Contracts.modulePath}/templates/sheets/recipe/craft-recipe-content.hbs`,
-        `${Contracts.modulePath}/templates/sheets/recipe/craft-recipe-header.hbs`,
-        
+        `${modulePath}/templates/sheets/recipe/craft-recipe-sheet.hbs`,
+        `${modulePath}/templates/sheets/recipe/craft-recipe-content.hbs`,
+        `${modulePath}/templates/sheets/recipe/craft-recipe-header.hbs`,
+
+        // Dialogs
+        `${modulePath}/templates/dialogs/item-select.hbs`,
     ];
 
     loadHandlebarsTemplates(templatePaths);
+
+    registerSetting('allowCraftWithoutGM', 
+    {
+        name: localizeString('ANVIL_AND_ARCANA.Settings.AllowCraftWithoutGM.Name'),
+        hint: localizeString('ANVIL_AND_ARCANA.Settings.AllowCraftWithoutGM.Hint'),
+        scope: 'world',
+        config: true,
+        type: Boolean,
+        requiresReload: true,
+        default: false
+    });
 });
 
 onReadyHook(() => {

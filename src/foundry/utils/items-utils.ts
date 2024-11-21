@@ -15,6 +15,11 @@ export function findItem<T>(func: FindPredicate) : T {
     return game.items.find(func);
 }
 
+export function findBySearchHash<T>(hash: number) : T[] {
+    // @ts-ignore
+    return game.items.filter(item => item.system.searchHash === hash);
+}
+
 export function getItem<T>(id: string) : T {
     // @ts-ignore
     return game.items.get(id);

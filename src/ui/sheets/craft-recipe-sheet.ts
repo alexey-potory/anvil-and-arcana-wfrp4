@@ -1,5 +1,5 @@
-import { Contracts } from "../../contracts";
-import { ItemDocument } from "../../foundry/entities/item-document";
+import { Contracts, modulePath } from "../../contracts";
+import { ItemDocument, RecipeDocument } from "../../foundry/entities/item-document";
 import { DropEventData } from "../../foundry/events/drop-event-data";
 import { OnDropEvent } from "../../foundry/events/on-drop-event";
 import { getDocumentByUuid } from "../../foundry/utils/documents-utils";
@@ -8,7 +8,7 @@ import { EventWithDataTarget, getDataAttribute } from "../../foundry/utils/html-
 import { findItem, getItem, updateItem } from "../../foundry/utils/items-utils";
 import { localizeString } from "../../foundry/utils/localization-utils";
 import { showWarning } from "../../foundry/utils/notifications-utils";
-import { createSearchHash } from "../../utils/search-string-utils";
+import { createSearchHash } from "../../utils/search-hashes-utils";
 import { getModuleSkills } from "../../utils/skills-utils";
 
 enum ResultType {
@@ -38,15 +38,6 @@ interface CraftRecipeCheck {
     };
 }
 
-interface RecipeDocument extends ItemDocument {
-    system: {
-        components: string[]
-        quantity: {
-            value: number
-        }
-    };
-}
-
 // @ts-ignore
 export class CraftRecipeSheet extends ItemSheetWfrp4e {
 
@@ -60,7 +51,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
     }
 
     get template() {
-        return `${Contracts.modulePath}/templates/sheets/recipe/craft-recipe-sheet.hbs`;
+        return `${modulePath}/templates/sheets/recipe/craft-recipe-sheet.hbs`;
     }
 
     activateListeners(html: any) {

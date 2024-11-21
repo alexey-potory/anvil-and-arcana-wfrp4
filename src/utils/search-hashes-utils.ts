@@ -1,7 +1,7 @@
 import { ItemDocument } from "../foundry/entities/item-document";
 
 export function createSearchHash(items: string[]) : number {
-    const sorted = items.sort((a, b) => {
+    const sorted = items.slice().sort((a, b) => {
         return a.localeCompare(b);
     });
 
