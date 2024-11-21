@@ -1,16 +1,16 @@
 import { Contracts, ModuleRoot} from "./contracts";
-import { CustomTypeUtils } from "./foundry/utils/custom-type-utils";
-import { HooksUtils } from "./foundry/utils/hooks-utils";
-import { TemplateUtils } from "./foundry/utils/template-utils";
+import { registerCustomType } from "./foundry/utils/custom-type-utils";
+import { onInitHook, onReadyHook } from "./foundry/utils/hooks-utils";
+import { loadHandlebarsTemplates } from "./foundry/utils/template-utils";
 import { CraftRecipeModel } from "./models/craft-recipe-model";
 import { CraftApplication} from "./ui/applications/craft-application";
 import { CraftRecipeSheet } from "./ui/sheets/craft-recipe-sheet";
 
-HooksUtils.onInit(() => {
+onInitHook(() => {
 
     // Loading custom item types
 
-    CustomTypeUtils.register(
+    registerCustomType(
         `${Contracts.moduleName}.recipe`,
         CraftRecipeModel,
         CraftRecipeSheet
@@ -25,14 +25,15 @@ HooksUtils.onInit(() => {
 
         // Recipe sheet
         `${Contracts.modulePath}/templates/sheets/recipe/craft-recipe-sheet.hbs`,
+        `${Contracts.modulePath}/templates/sheets/recipe/craft-recipe-content.hbs`,
         `${Contracts.modulePath}/templates/sheets/recipe/craft-recipe-header.hbs`,
         
     ];
 
-    TemplateUtils.load(templatePaths);
+    loadHandlebarsTemplates(templatePaths);
 });
 
-HooksUtils.onReady(() => {
+onReadyHook(() => {
 
     // @ts-ignore
     Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {

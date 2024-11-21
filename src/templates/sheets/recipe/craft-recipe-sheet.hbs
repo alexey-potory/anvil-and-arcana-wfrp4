@@ -1,3 +1,11 @@
-<form class="wfrp4e trade-recipe item-sheet craft-recipe {{cssClass}}" autocomplete="off">
+<form class="wfrp4e trade-recipe item-sheet {{cssClass}} craft-recipe" autocomplete="off">
     {{> modules/anvil-and-arcana-wfrp4/templates/sheets/recipe/craft-recipe-header.hbs category="TYPES.Item.anvil-and-arcana-wfrp4.recipe" }}
+
+    <div class="ingredients-list">
+        <section class="content">
+            <div class="inventory save-scroll active">
+                {{> modules/anvil-and-arcana-wfrp4/templates/sheets/recipe/craft-recipe-content.hbs}}
+            </div>
+        </section>
+    </div>
 </form>

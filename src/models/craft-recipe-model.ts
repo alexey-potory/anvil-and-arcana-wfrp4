@@ -1,6 +1,6 @@
-import { DocumentsUtils } from "../foundry/utils/documents-utils";
-import { SchemaUtils } from "../foundry/utils/schema-utils";
-import { SkillsUtils } from "../utils/skills-utils";
+import { updateDocumentSource } from "../foundry/utils/documents-utils";
+import { schemaFields } from "../foundry/utils/schema-utils";
+import { getModuleSkills } from "../utils/skills-utils";
 
 interface CraftRecipeData {
     img: string;
@@ -12,7 +12,7 @@ export class CraftRecipeModel extends BaseItemModel {
 
     static defineSchema() {
         const schema = super.defineSchema();
-        const fields$F = SchemaUtils.fields;
+        const fields$F = schemaFields();
 
         schema.components = new fields$F.ArrayField(new fields$F.StringField());
         schema.result = new fields$F.SchemaField({
@@ -57,10 +57,10 @@ export class CraftRecipeModel extends BaseItemModel {
     }
 
     _initializeSystem() {
-        const skills = SkillsUtils.all();
+        const skills = getModuleSkills();
         const skillKey = Object.keys(skills)[0];
 
-        DocumentsUtils.updateSource(
+        updateDocumentSource(
             //@ts-ignore
             this.parent, {
                 system: {
@@ -82,7 +82,7 @@ export class CraftRecipeModel extends BaseItemModel {
     }
     
     _updateImage(path: string) {
-        DocumentsUtils.updateSource(
+        updateDocumentSource(
             //@ts-ignore
             this.parent, {img : path}
         );

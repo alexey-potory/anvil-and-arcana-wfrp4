@@ -1,0 +1,67 @@
+<div class="components-header item">
+    <span class="name">{{localize "ANVIL_AND_ARCANA.Recipe.SuccessResultHeader"}}</span>
+</div>
+
+<div id="success-result" class="craft-items-section">
+    <ol class="inventory-list result-container craft-items-list">
+        {{#if result.success}}
+            <div class="item" data-id="{{result.success.id}}" data-item-id="{{result.success.id}}">
+                <div class="content">
+                    <div class="item-name item-dropdown">
+                        <div class="image" style="background-image: url({{result.success.img}})"></div>
+                        <a class="name">{{result.success.name}}</a>
+                    </div>
+                    <div class="craft-item-controls">
+                        <a id="success-result-delete" class="item-control" style="font-size: 1.5em"
+                        title="{{localize 'SHEET.DeleteItem'}}"><i
+                                class="fas fa-trash"></i></a>
+                    </div>
+                </div>
+            </div>
+        {{else}}
+            <p class="items-placeholder">{{localize "ANVIL_AND_ARCANA.Recipe.SuccessResultPlaceholder"}}</p>
+        {{/if}}
+    </ol>
+</div>
+
+<div class="components-header item">
+    <span class="name">{{localize "ANVIL_AND_ARCANA.Recipe.FailResultHeader"}}</span>
+</div>
+
+<div id="fail-result" class="craft-items-section">
+    <ol class="inventory-list result-container craft-items-list">
+        {{#if result.fail}}
+            <div class="item" data-id="{{result.fail.id}}" data-item-id="{{result.fail.id}}">
+                <div class="content">
+                    <div class="item-name item-dropdown">
+                        <div class="image" style="background-image: url({{result.fail.img}})"></div>
+                        <a class="name">{{result.fail.name}}</a>
+                    </div>
+                    <div class="craft-item-controls">
+                        <a id="fail-result-delete" class="item-control" style="font-size: 1.5em"
+                        title="{{localize 'SHEET.DeleteItem'}}"><i
+                                class="fas fa-trash"></i></a>
+                    </div>
+                </div>
+            </div>
+        {{else}}
+            <p class="items-placeholder">{{localize "ANVIL_AND_ARCANA.Recipe.FailResultPlaceholder"}}</p>
+        {{/if}}
+    </ol>
+</div>
+
+<div class="components-header item">
+    <span class="name">{{localize "ANVIL_AND_ARCANA.Recipe.ComponentsHeader"}}</span>
+</div>
+
+<div id="components-list" class="craft-items-section">
+    <ol style="min-height: 35px" class="inventory-list craft-items-list">
+        {{#unless components.length}}
+            <p class="items-placeholder">{{localize "ANVIL_AND_ARCANA.Recipe.ComponentsPlaceholder"}}</p>
+        {{/unless}}
+
+        {{#if components.length}}
+            {{> modules/anvil-and-arcana-wfrp4/templates/_shared/items-list.hbs items=components}}
+        {{/if}}
+    </ol>
+</div>

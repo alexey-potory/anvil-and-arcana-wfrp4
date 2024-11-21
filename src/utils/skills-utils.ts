@@ -1,6 +1,4 @@
-export class SkillsUtils {
-    static all() : any {
-        //@ts-ignore
-        return game.i18n.translations.ANVIL_AND_ARCANA.Skills;
-    }
+export function getModuleSkills() : any {
+    //@ts-ignore
+    return game.i18n.translations.ANVIL_AND_ARCANA.Skills;
 }

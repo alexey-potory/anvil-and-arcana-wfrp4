@@ -1,22 +1,22 @@
-.crafting-application {
+.craft-application {
     min-width: 300px;
     min-height: 250px;
 }
 
-.crafting-application .window-content{
+.craft-application .window-content{
     background-image: url(/../../../systems/wfrp4e/ui/frames/parchment-texture.webp) !important;
     padding: 10px !important;
     overflow: hidden;
 }
 
-.crafting-application .root {
+.craft-application .root {
     height: 100%;
     padding: 0px 10px 0px 10px;
     display: flex;
     flex-direction: column;
 }
 
-.crafting-application .header {
+.craft-application .header {
     width: 100%;
     height: 20px;
     margin: 0px;
@@ -32,7 +32,7 @@
     display: inline-flex;
 }
 
-.crafting-application .items-list {
+.craft-items-list {
     width: 100%;
     text-align: center;
     list-style-type: none;
@@ -44,7 +44,7 @@
     padding: 0px;
 }
 
-.crafting-application .items-placeholder {
+.craft-application .items-placeholder {
     color: gray; font-style: italic;
     flex-grow: 1;
     display: flex;
@@ -52,15 +52,18 @@
     justify-content: center;
 }
 
-.crafting-application .items-section {
+.craft-items-section {
     flex:1;
     display: flex;
     overflow: auto;
     flex-direction: column;
     border: 1px solid #736953a6;
     border-top: none;
-    margin-bottom: 10px;
     padding: 10px;
+}
+
+.craft-items-section:not(:last-child) {
+    margin-bottom: 10px;
 }
 
 .craft-item {
@@ -106,7 +109,7 @@
     width: 100%;
 }
 
-.craft-item .item-content .item-controls {
+.craft-item .item-content .craft-item-controls {
     padding: 5px 0px 0px 0px;
     font-family: "Font Awesome 5 Free";
     font-size: 10px;
@@ -118,13 +121,29 @@
     margin-left: 0px;
 }
 
-.craft-item .item-controls .item-control {
-    font-size: 1.5em
+.craft-recipe-sheet {
+    min-height: 600px !important;
 }
 
 .craft-recipe {
-    display: flex;
-    flex-direction: column
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.craft-recipe .components-header {
+    width: 100%;
+    height: 20px;
+    margin: 0px;
+    padding: 0px 12px 0px 6px;
+    border: 1px solid #736953a6;
+    font-family: var(--actor-label-font-family);
+    font-size: var(--actor-label-font-size);
+    font-weight: var(--actor-label-font-weight);
+    color: var(--actor-label-color);
+    background: none;
+    box-shadow: 0 0 10px #6b3a0f87 inset;
+    text-align: left;
+    display: inline-flex;
 }
 
 .craft-recipe .input-container {
@@ -163,6 +182,19 @@
 }
 
 .craft-recipe .result-container {
-    min-height: 35px;
+    /* min-height: 35px; */
     overflow: hidden;
+}
+
+.craft-recipe .items-placeholder {
+    color: gray;
+    font-style: italic;
+}
+
+.craft-recipe .divider {
+    min-height: 10px;
+}
+
+.craft-item-controls .item-control {
+    font-size: 1.5em
 }

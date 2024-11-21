@@ -13,5 +13,11 @@
     "ANVIL_AND_ARCANA.Recipe.CheckType.Extended": "Extended",
     "ANVIL_AND_ARCANA.Recipe.ExtendedCheck.SL": "SL",
     "ANVIL_AND_ARCANA.Recipe.ModifierLabel": "Diff.Mod.",
-    "ANVIL_AND_ARCANA.Recipe.ModifierPlaceholder": "Modifier"
+    "ANVIL_AND_ARCANA.Recipe.ModifierPlaceholder": "Modifier",
+    "ANVIL_AND_ARCANA.Recipe.SuccessResultHeader": "Success Result",
+    "ANVIL_AND_ARCANA.Recipe.SuccessResultPlaceholder": "Add an item for a successful result...",
+    "ANVIL_AND_ARCANA.Recipe.FailResultHeader": "Failure Result",
+    "ANVIL_AND_ARCANA.Recipe.FailResultPlaceholder": "Add an item for a failure result...",
+    "ANVIL_AND_ARCANA.Recipe.ComponentsHeader": "Ingredients",
+    "ANVIL_AND_ARCANA.Recipe.ComponentsPlaceholder": "Add ingredients..."
 }

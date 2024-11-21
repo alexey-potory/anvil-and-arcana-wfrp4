@@ -1,8 +1,13 @@
 import { Contracts } from "../../contracts";
 import { ItemDocument } from "../../foundry/entities/item-document";
-import { ItemsUtils } from "../../foundry/utils/items-utils";
-import { LocalizationUtils } from "../../foundry/utils/localization-utils";
-import { SkillsUtils } from "../../utils/skills-utils";
+import { DropEventData } from "../../foundry/events/drop-event-data";
+import { OnDropEvent } from "../../foundry/events/on-drop-event";
+import { getDocumentByUuid } from "../../foundry/utils/documents-utils";
+import { getDropEventData } from "../../foundry/utils/event-utils";
+import { findItem, getItem } from "../../foundry/utils/items-utils";
+import { localizeString } from "../../foundry/utils/localization-utils";
+import { showWarning } from "../../foundry/utils/notifications-utils";
+import { getModuleSkills } from "../../utils/skills-utils";
 
 interface CraftRecipeResults {
     success: string;
@@ -31,8 +36,28 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
 
     currentData: ItemDocument | undefined;
 
+    constructor(item:any, options:any) {
+        super(item, options);
+    
+        //@ts-ignore
+        this.options.classes.push('craft-recipe-sheet');
+    }
+
     get template() {
         return `${Contracts.modulePath}/templates/sheets/recipe/craft-recipe-sheet.hbs`;
+    }
+
+    activateListeners(html: any) {
+        super.activateListeners(html);
+
+        html.find('#success-result').on('drop', this._onSuccessDrop.bind(this));
+        html.find('#fail-result').on('drop', () => console.log('Fail drop'));
+
+        // html.find('#ingredients-list').on('drop', this._onIngredientAdd.bind(this));
+        // html.find(".ingredient-delete").click(this._onIngredientDelete.bind(this));
+
+        // html.find("#success-result-delete").click(this._onSuccessResultDelete.bind(this));
+        // html.find("#fail-result-delete").click(this._onFailResultDelete.bind(this));
     }
 
     async getData(options: any) {
@@ -47,13 +72,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
 
         data.check = check;
         data.results = results;
-
-        data.components = {
-            label: LocalizationUtils.localize("WFRP4E.TrappingType.Cargo"),
-            items: components,
-            show: true,
-            dataType: "cargo"
-        };
+        data.components = components;
 
         return data;
     }
@@ -62,10 +81,10 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         return {
             selectedType: data.system.check.type,
             selectedSkill: data.system.check.skill,
-            skills: SkillsUtils.all(),
+            skills: getModuleSkills(),
             checkTypes: {
-                Simple: LocalizationUtils.localize("ANVIL_AND_ARCANA.Check.Type.Simple"),
-                Extended: LocalizationUtils.localize("ANVIL_AND_ARCANA.Check.Type.Extended")
+                Simple: localizeString("ANVIL_AND_ARCANA.Check.Type.Simple"),
+                Extended: localizeString("ANVIL_AND_ARCANA.Check.Type.Extended")
             },
             extended: {
                 selectedDifficulty: data.system.check.extended.difficulty,
@@ -77,7 +96,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
 
     _getRecipeComponents(data: any) : ItemDocument[] {
         const components: string[] = data.system.components;
-        return components?.map(id => ItemsUtils.get<ItemDocument>(id));
+        return components?.map(id => getItem<ItemDocument>(id));
     }
 
     _getRecipeResults(data: any) : CraftRecipeResults {
@@ -85,8 +104,20 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         const failId = data.system.results?.fail;
 
         return {
-            success: ItemsUtils.find(item => item._id === successId),
-            fail: ItemsUtils.find(item => item._id === failId)
+            success: findItem(item => item._id === successId),
+            fail: findItem(item => item._id === failId)
         }
+    }
+
+    async _onSuccessDrop(event: OnDropEvent) {
+        event.preventDefault();
+
+        const data = getDropEventData<DropEventData>(event);
+
+        if (data.type !== 'Item') {
+            return showWarning(localizeString('...'));
+        }
+
+        const item = await getDocumentByUuid<ItemDocument>(data.uuid);
     }
 }

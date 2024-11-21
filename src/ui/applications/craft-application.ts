@@ -1,26 +1,20 @@
 import { Contracts } from "../../contracts";
-import { OnTargetedEvent } from "../../foundry/events/on-target-event";
-import { getItemByUuid} from "../../documents/utils";
 import { ItemDocument } from "../../foundry/entities/item-document";
-import { EventUtils } from "../../foundry/utils/event-utils";
+import { DropEventData } from "../../foundry/events/drop-event-data";
 import { OnDropEvent } from "../../foundry/events/on-drop-event";
-import { NotificationUtils } from "../../foundry/utils/notifications-utils";
-import { ItemsUtils } from "../../foundry/utils/items-utils";
-import { LocalizationUtils } from "../../foundry/utils/localization-utils";
-import { ObjectsUtils } from "../../foundry/utils/objects-utils";
-import { SearchStringUtils } from "../../utils/search-string-utils";
-
-interface DropEventData {
-    uuid: string;
-    type: 'Item' | 'Actor'
-}
-
-interface GameItem extends ItemDocument { }
+import { OnTargetedEvent } from "../../foundry/events/on-target-event";
+import { getDocumentByUuid } from "../../foundry/utils/documents-utils";
+import { getAttributeEventData, getDropEventData } from "../../foundry/utils/event-utils";
+import { findItemPrototypeByName, updateItemCount } from "../../foundry/utils/items-utils";
+import { localizeString } from "../../foundry/utils/localization-utils";
+import { showWarning } from "../../foundry/utils/notifications-utils";
+import { mergeObjects } from "../../foundry/utils/objects-utils";
+import { createSearchString } from "../../utils/search-string-utils";
 
 // @ts-ignore
 export class CraftApplication extends Application {
 
-    items: GameItem[];
+    items: ItemDocument[];
 
     constructor(options = {}) {
         super();
@@ -30,7 +24,7 @@ export class CraftApplication extends Application {
     static get defaultOptions() {
 
         const templatePath =
-            `${Contracts.modulePath}/templates/applications/crafting-application.hbs`;
+            `${Contracts.modulePath}/templates/applications/craft-application.hbs`;
 
         const startWidth = 400;
         const startHeight = 400;
@@ -42,18 +36,18 @@ export class CraftApplication extends Application {
             height: startHeight,
             resizable: true,
             classes: [
-                'crafting-application'
+                'craft-application'
             ]
         };
 
-        return ObjectsUtils.merge(super.defaultOptions, settings);
+        return mergeObjects(super.defaultOptions, settings);
     }
 
     activateListeners(html: any) {
         super.activateListeners(html);
 
         // Drag and drop
-        html.find('.items-section').on('drop', this._onItemAdd.bind(this));
+        html.find('.craft-items-section').on('drop', this._onItemAdd.bind(this));
 
         // Buttons
         html.find(".item-delete").click(this._onItemRemove.bind(this));
@@ -69,23 +63,23 @@ export class CraftApplication extends Application {
     async _onItemAdd(event: OnDropEvent) {
         event.preventDefault();
 
-        const data = EventUtils.getDropData<DropEventData>(event);
+        const data = getDropEventData<DropEventData>(event);
 
         if (data.type !== 'Item') {
-            return NotificationUtils.warning(LocalizationUtils.localize('...'));
+            return showWarning(localizeString('...'));
         }
 
-        const item = await getItemByUuid<GameItem>(data.uuid);
+        const item = await getDocumentByUuid<ItemDocument>(data.uuid);
 
         if (!item.parent) {
             // TODO: Commented for testing, uncomment on build
             // return NotificationUtils.warning(LocalizationUtils.localize('...'));
         }
 
-        if (item.system.quantity.value > 0) {
-            await ItemsUtils.updateCount(item, item.system.quantity.value - 1);
+        if (item.system.quantity?.value > 0) {
+            await updateItemCount(item, item.system.quantity.value - 1);
         } else {
-            return NotificationUtils.warning(LocalizationUtils.localize('...'));
+            return showWarning(localizeString('...'));
         }
 
         this.items.push(item);
@@ -93,18 +87,18 @@ export class CraftApplication extends Application {
     }
 
     async _onItemRemove(event: OnTargetedEvent) {
-        const index = EventUtils.getAttributeData<number>(event, "index");
+        const index = getAttributeEventData<number>(event, "index");
 
         const item = this.items[index];
-        await ItemsUtils.updateCount(item, item.system.quantity.value + 1);
+        await updateItemCount(item, item.system.quantity.value + 1);
 
         this.items.splice(index, 1);
         this.render(true);
     }
 
     async _onSubmit() {
-        const items = this.items.map(item => ItemsUtils.findPrototypeByName(item));
-        const searchString = SearchStringUtils.createSearchString(items);
+        const items = this.items.map(item => findItemPrototypeByName(item));
+        const searchString = createSearchString(items);
 
         // TODO: Recipe search and apply
     }

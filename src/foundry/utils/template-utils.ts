@@ -1,6 +1,4 @@
-export class TemplateUtils {
-    static load(paths: string[]) {
-        // @ts-ignore
-        loadTemplates(paths)
-    }
+export function loadHandlebarsTemplates(paths: string[]) {
+    // @ts-ignore
+    loadTemplates(paths)
 }

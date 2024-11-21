@@ -2,28 +2,26 @@ import { ItemDocument } from "../entities/item-document";
 
 type FindPredicate = (item: ItemDocument) => boolean;
 
-export class ItemsUtils {
-    static async updateCount(document: ItemDocument, count: number) {
-        await document.update({ "system.quantity.value": count });
-    }
+export async function updateItemCount(document: ItemDocument, count: number) {
+    await document.update({ "system.quantity.value": count });
+}
 
-    static find<T>(func: FindPredicate) : T {
-        // @ts-ignore
-        return game.items.find(func);
-    }
+export function findItem<T>(func: FindPredicate) : T {
+    // @ts-ignore
+    return game.items.find(func);
+}
 
-    static get<T>(id: string) : T {
-        // @ts-ignore
-        return game.items.get(id);
-    }
+export function getItem<T>(id: string) : T {
+    // @ts-ignore
+    return game.items.get(id);
+}
 
-    static findPrototypeByName<T>(sourceItem: T) : T {
-        // @ts-ignore
-        return game.items.find(item => item.name === sourceItem.name);
-    }
+export function findItemPrototypeByName<T>(sourceItem: T) : T {
+    // @ts-ignore
+    return game.items.find(item => item.name === sourceItem.name);
+}
 
-    static filter<T>(func: FindPredicate) : T[] {
-        // @ts-ignore
-        return game.items.filter(func);
-    }
+export function filterItems<T>(func: FindPredicate) : T[] {
+    // @ts-ignore
+    return game.items.filter(func);
 }

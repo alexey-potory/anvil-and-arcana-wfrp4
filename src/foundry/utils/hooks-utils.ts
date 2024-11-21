@@ -1,13 +1,11 @@
 type HookFunc = () => void;
 
-export class HooksUtils {
-    static onInit(func: HookFunc) {
-        // @ts-ignore
-        Hooks.on("init", func);
-    }
+export function onInitHook(func: HookFunc) {
+    // @ts-ignore
+    Hooks.on("init", func);
+}
 
-    static onReady(func: HookFunc) {
-        // @ts-ignore
-        Hooks.once("ready", func);
-    }
+export function onReadyHook(func: HookFunc) {
+    // @ts-ignore
+    Hooks.once("ready", func);
 }
