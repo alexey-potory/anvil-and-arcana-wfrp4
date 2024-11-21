@@ -9,6 +9,11 @@ import { localizeString } from "../../foundry/utils/localization-utils";
 import { showWarning } from "../../foundry/utils/notifications-utils";
 import { getModuleSkills } from "../../utils/skills-utils";
 
+enum ResultType {
+    Fail = 'fail',
+    Success = 'success'
+}
+
 interface CraftRecipeResults {
     success: string;
     fail: string;
@@ -111,10 +116,6 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
 
     async _onSuccessDrop(event: OnDropEvent) {
         event.preventDefault();
-        
-        if (!this.currentData) {
-            throw Error(localizeString('...'));
-        }
 
         const item = await this._getDropItem(event);
 
@@ -122,15 +123,11 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
             return;
         }
 
-        await updateItem(this.currentData, "system.results.success", item._id);
+        await this._updateResult(ResultType.Success, item._id);
     }
 
     async _onFailDrop(event: OnDropEvent) {
         event.preventDefault();
-        
-        if (!this.currentData) {
-            throw Error(localizeString('...'));
-        }
 
         const item = await this._getDropItem(event);
 
@@ -138,27 +135,19 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
             return;
         }
 
-        await updateItem(this.currentData, "system.results.fail", item._id);
+        await this._updateResult(ResultType.Fail, item._id);
     }
 
     async _onSuccessResultRemove(event: OnDropEvent) {
         event.preventDefault();
         
-        if (!this.currentData) {
-            throw Error(localizeString('...'));
-        }
-
-        await updateItem(this.currentData, "system.results.success", '');
+        await this._updateResult(ResultType.Success, '');
     }
 
     async _onFailResultRemove(event: OnDropEvent) {
         event.preventDefault();
-        
-        if (!this.currentData) {
-            throw Error(localizeString('...'));
-        }
 
-        await updateItem(this.currentData, "system.results.fail", '');
+        await this._updateResult(ResultType.Fail, '');
     }
 
     async _getDropItem(event: OnDropEvent) : Promise<ItemDocument | undefined> {
@@ -170,5 +159,13 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         }
 
         return await getDocumentByUuid<ItemDocument>(data.uuid);
+    }
+
+    async _updateResult(type: ResultType, value: string) {
+        if (!this.currentData) {
+            throw Error(localizeString('...'));
+        }
+
+        await updateItem(this.currentData, `system.results.${type}`, value);
     }
 }
