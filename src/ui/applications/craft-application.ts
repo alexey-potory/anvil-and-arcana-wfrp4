@@ -30,7 +30,7 @@ export class CraftApplication extends Application {
         const startHeight = 400;
 
         const settings = {
-            title: "Ступка и пестик",
+            title: undefined,
             template: templatePath,
             width: startWidth,
             height: startHeight,
