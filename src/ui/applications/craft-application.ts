@@ -50,7 +50,7 @@ export class CraftApplication extends Application {
         html.find('.craft-items-section').on('drop', this._onItemAdd.bind(this));
 
         // Buttons
-        html.find(".item-delete").click(this._onItemRemove.bind(this));
+        html.find(".item-remove").click(this._onItemRemove.bind(this));
         html.find("#submit").click(this._onSubmit.bind(this));
     }
 

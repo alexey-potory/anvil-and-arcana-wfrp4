@@ -4,22 +4,22 @@
 
 <div id="success-result" class="craft-items-section">
     <ol class="inventory-list result-container craft-items-list">
-        {{#if result.success}}
-            <div class="item" data-id="{{result.success.id}}" data-item-id="{{result.success.id}}">
-                <div class="content">
-                    <div class="item-name item-dropdown">
-                        <div class="image" style="background-image: url({{result.success.img}})"></div>
-                        <a class="name">{{result.success.name}}</a>
-                    </div>
-                    <div class="craft-item-controls">
-                        <a id="success-result-delete" class="item-control" style="font-size: 1.5em"
-                        title="{{localize 'SHEET.DeleteItem'}}"><i
-                                class="fas fa-trash"></i></a>
-                    </div>
+        {{#if results.success}}
+        <div class="craft-item" data-id="{{results.success.id}}" data-item-id="{{results.success.id}}">
+            <div class="item-content">
+                <div class="item-body">
+                    <div class="item-icon" style="background-image: url({{results.success.img}})"></div>
+                    <a>{{results.success.name}}</a>
+                </div>
+                <div class="craft-item-controls">
+                    <a id="success-result-remove" class="item-control" title="{{localize 'SHEET.DeleteItem'}}">
+                        <i class="fas fa-trash"></i>
+                    </a>
                 </div>
             </div>
+        </div>
         {{else}}
-            <p class="items-placeholder">{{localize "ANVIL_AND_ARCANA.Recipe.SuccessResultPlaceholder"}}</p>
+        <p class="items-placeholder">{{localize "ANVIL_AND_ARCANA.Recipe.SuccessResultPlaceholder"}}</p>
         {{/if}}
     </ol>
 </div>
@@ -30,22 +30,22 @@
 
 <div id="fail-result" class="craft-items-section">
     <ol class="inventory-list result-container craft-items-list">
-        {{#if result.fail}}
-            <div class="item" data-id="{{result.fail.id}}" data-item-id="{{result.fail.id}}">
-                <div class="content">
-                    <div class="item-name item-dropdown">
-                        <div class="image" style="background-image: url({{result.fail.img}})"></div>
-                        <a class="name">{{result.fail.name}}</a>
-                    </div>
-                    <div class="craft-item-controls">
-                        <a id="fail-result-delete" class="item-control" style="font-size: 1.5em"
-                        title="{{localize 'SHEET.DeleteItem'}}"><i
-                                class="fas fa-trash"></i></a>
-                    </div>
+        {{#if results.fail}}
+        <div class="craft-item" data-id="{{results.fail.id}}" data-item-id="{{results.fail.id}}">
+            <div class="item-content">
+                <div class="item-body">
+                    <div class="item-icon" style="background-image: url({{results.fail.img}})"></div>
+                    <a>{{results.fail.name}}</a>
+                </div>
+                <div class="craft-item-controls">
+                    <a id="fail-result-remove" class="item-control" title="{{localize 'SHEET.DeleteItem'}}">
+                        <i class="fas fa-trash"></i>
+                    </a>
                 </div>
             </div>
+        </div>
         {{else}}
-            <p class="items-placeholder">{{localize "ANVIL_AND_ARCANA.Recipe.FailResultPlaceholder"}}</p>
+        <p class="items-placeholder">{{localize "ANVIL_AND_ARCANA.Recipe.FailResultPlaceholder"}}</p>
         {{/if}}
     </ol>
 </div>
@@ -57,11 +57,11 @@
 <div id="components-list" class="craft-items-section">
     <ol style="min-height: 35px" class="inventory-list craft-items-list">
         {{#unless components.length}}
-            <p class="items-placeholder">{{localize "ANVIL_AND_ARCANA.Recipe.ComponentsPlaceholder"}}</p>
+        <p class="items-placeholder">{{localize "ANVIL_AND_ARCANA.Recipe.ComponentsPlaceholder"}}</p>
         {{/unless}}
 
         {{#if components.length}}
-            {{> modules/anvil-and-arcana-wfrp4/templates/_shared/items-list.hbs items=components}}
+        {{> modules/anvil-and-arcana-wfrp4/templates/_shared/items-list.hbs items=components}}
         {{/if}}
     </ol>
 </div>

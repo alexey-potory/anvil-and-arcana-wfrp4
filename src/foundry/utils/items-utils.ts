@@ -6,6 +6,10 @@ export async function updateItemCount(document: ItemDocument, count: number) {
     await document.update({ "system.quantity.value": count });
 }
 
+export async function updateItem(document: ItemDocument, key: string, value: any) {
+    await document.update({ [key]: value })
+}
+
 export function findItem<T>(func: FindPredicate) : T {
     // @ts-ignore
     return game.items.find(func);
