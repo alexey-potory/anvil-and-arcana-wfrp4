@@ -8,6 +8,7 @@ import { EventWithDataTarget, getDataAttribute } from "../../foundry/utils/html-
 import { findItem, getItem, updateItem } from "../../foundry/utils/items-utils";
 import { localizeString } from "../../foundry/utils/localization-utils";
 import { showWarning } from "../../foundry/utils/notifications-utils";
+import { createSearchHash } from "../../utils/search-string-utils";
 import { getModuleSkills } from "../../utils/skills-utils";
 
 enum ResultType {
@@ -163,9 +164,9 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         }
 
         const components = this.currentData.system.components || [];
-
         components.push(item._id);
-        await updateItem(this.currentData, "system.components", components);
+
+        await this._updateComponents(components);
     }
 
     async _onSuccessResultRemove() {
@@ -186,7 +187,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         const components = this.currentData.system.components || [];
 
         components.splice(index, 1);
-        await updateItem(this.currentData, "system.components", components);
+        await this._updateComponents(components);
     }
 
     async _getDropItem(event: OnDropEvent) : Promise<ItemDocument | undefined> {
@@ -206,5 +207,20 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         }
 
         await updateItem(this.currentData, `system.results.${type}`, value);
+    }
+
+    async _updateComponents(components: string[]) {
+        if (!this.currentData) {
+            throw Error(localizeString('...'));
+        }
+
+        const searchHash = createSearchHash(components);
+
+        const update = {
+            searchHash,
+            components
+        };
+        
+        await updateItem(this.currentData, "system", update);
     }
 }

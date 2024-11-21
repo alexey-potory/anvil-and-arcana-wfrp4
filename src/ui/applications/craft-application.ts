@@ -9,7 +9,7 @@ import { findItemPrototypeByName, updateItemCount } from "../../foundry/utils/it
 import { localizeString } from "../../foundry/utils/localization-utils";
 import { showWarning } from "../../foundry/utils/notifications-utils";
 import { mergeObjects } from "../../foundry/utils/objects-utils";
-import { createSearchString } from "../../utils/search-string-utils";
+import { createSearchHash } from "../../utils/search-string-utils";
 
 // @ts-ignore
 export class CraftApplication extends Application {
@@ -97,8 +97,9 @@ export class CraftApplication extends Application {
     }
 
     async _onSubmit() {
-        const items = this.items.map(item => findItemPrototypeByName(item));
-        const searchString = createSearchString(items);
+        
+        const ids = this.items.map(item => findItemPrototypeByName(item)._id);
+        const searchHash = createSearchHash(ids);
 
         // TODO: Recipe search and apply
     }

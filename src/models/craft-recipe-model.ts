@@ -15,6 +15,7 @@ export class CraftRecipeModel extends BaseItemModel {
         const fields$F = schemaFields();
 
         schema.components = new fields$F.ArrayField(new fields$F.StringField());
+        schema.searchHash = new fields$F.NumberField();
         schema.results = new fields$F.SchemaField({
             success: new fields$F.StringField(),
             fail: new fields$F.StringField()

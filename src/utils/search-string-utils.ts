@@ -1,18 +1,21 @@
 import { ItemDocument } from "../foundry/entities/item-document";
 
-export function createSearchString(items: ItemDocument[]) : string {
+export function createSearchHash(items: string[]) : number {
     const sorted = items.sort((a, b) => {
-        const idA = a._id;
-        const idB = b._id;
-        return idA.localeCompare(idB);
-    }).map(item => item._id);
+        return a.localeCompare(b);
+    });
 
-    return sorted.join(',');
+    return createHash(sorted.join(','));
 }
 
-export function areSameSearchString(a:string, b: string) {
-    if (a.length != b.length)
-        return false;
+function createHash(str: string): number {
+    let hash = 0;
 
-    return a === b;
+    for (let i = 0, len = str.length; i < len; i++) {
+        let chr = str.charCodeAt(i);
+        hash = (hash << 5) - hash + chr;
+        hash |= 0;
+    }
+
+    return hash;
 }
