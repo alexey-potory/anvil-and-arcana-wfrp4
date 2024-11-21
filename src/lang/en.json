@@ -11,13 +11,13 @@
     "ANVIL_AND_ARCANA.Recipe.CheckTypeLabel": "Check Type",
     "ANVIL_AND_ARCANA.Recipe.CheckType.Simple": "Simple",
     "ANVIL_AND_ARCANA.Recipe.CheckType.Extended": "Extended",
-    "ANVIL_AND_ARCANA.Recipe.ExtendedCheck.SL": "SL",
-    "ANVIL_AND_ARCANA.Recipe.ModifierLabel": "Diff.Mod.",
-    "ANVIL_AND_ARCANA.Recipe.ModifierPlaceholder": "Modifier",
-    "ANVIL_AND_ARCANA.Recipe.SuccessResultHeader": "Success Result",
-    "ANVIL_AND_ARCANA.Recipe.SuccessResultPlaceholder": "Add an item for a successful result...",
-    "ANVIL_AND_ARCANA.Recipe.FailResultHeader": "Failure Result",
-    "ANVIL_AND_ARCANA.Recipe.FailResultPlaceholder": "Add an item for a failure result...",
-    "ANVIL_AND_ARCANA.Recipe.ComponentsHeader": "Ingredients",
-    "ANVIL_AND_ARCANA.Recipe.ComponentsPlaceholder": "Add ingredients..."
+    "ANVIL_AND_ARCANA.Recipe.ExtendedCheck.SuccessLevels": "SL",
+    "ANVIL_AND_ARCANA.Recipe.DifficultyModifier.Label": "Diff.Mod.",
+    "ANVIL_AND_ARCANA.Recipe.DifficultyModifier.Placeholder": "Difficulty Modifier",
+    "ANVIL_AND_ARCANA.Recipe.SuccessResult.Header": "Success Result",
+    "ANVIL_AND_ARCANA.Recipe.SuccessResult.Placeholder": "Add an item for a successful result...",
+    "ANVIL_AND_ARCANA.Recipe.FailResult.Header": "Failure Result",
+    "ANVIL_AND_ARCANA.Recipe.FailResult.Placeholder": "Add an item for a failure result...",
+    "ANVIL_AND_ARCANA.Recipe.Components.Header": "Components",
+    "ANVIL_AND_ARCANA.Recipe.Components.Placeholder": "Add components..."
 }

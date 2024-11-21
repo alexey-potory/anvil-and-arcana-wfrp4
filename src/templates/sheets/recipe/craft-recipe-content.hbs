@@ -1,5 +1,5 @@
 <div class="components-header item">
-    <span class="name">{{localize "ANVIL_AND_ARCANA.Recipe.SuccessResultHeader"}}</span>
+    <span class="name">{{localize "ANVIL_AND_ARCANA.Recipe.SuccessResult.Header"}}</span>
 </div>
 
 <div id="success-result" class="craft-items-section">
@@ -19,13 +19,13 @@
             </div>
         </div>
         {{else}}
-        <p class="items-placeholder">{{localize "ANVIL_AND_ARCANA.Recipe.SuccessResultPlaceholder"}}</p>
+        <p class="items-placeholder">{{localize "ANVIL_AND_ARCANA.Recipe.SuccessResult.Placeholder"}}</p>
         {{/if}}
     </ol>
 </div>
 
 <div class="components-header item">
-    <span class="name">{{localize "ANVIL_AND_ARCANA.Recipe.FailResultHeader"}}</span>
+    <span class="name">{{localize "ANVIL_AND_ARCANA.Recipe.FailResult.Header"}}</span>
 </div>
 
 <div id="fail-result" class="craft-items-section">
@@ -45,19 +45,19 @@
             </div>
         </div>
         {{else}}
-        <p class="items-placeholder">{{localize "ANVIL_AND_ARCANA.Recipe.FailResultPlaceholder"}}</p>
+        <p class="items-placeholder">{{localize "ANVIL_AND_ARCANA.Recipe.FailResult.Placeholder"}}</p>
         {{/if}}
     </ol>
 </div>
 
 <div class="components-header item">
-    <span class="name">{{localize "ANVIL_AND_ARCANA.Recipe.ComponentsHeader"}}</span>
+    <span class="name">{{localize "ANVIL_AND_ARCANA.Recipe.Components.Header"}}</span>
 </div>
 
 <div id="components-list" class="craft-items-section">
     <ol style="min-height: 35px" class="inventory-list craft-items-list">
         {{#unless components.length}}
-        <p class="items-placeholder">{{localize "ANVIL_AND_ARCANA.Recipe.ComponentsPlaceholder"}}</p>
+        <p class="items-placeholder">{{localize "ANVIL_AND_ARCANA.Recipe.Components.Placeholder"}}</p>
         {{/unless}}
 
         {{#if components.length}}
