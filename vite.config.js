@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import fs from "fs-extra";
 import {copySrcFile, copySrcFolder} from "./buildUtils";
 
 function fileMarkerPlugin() {
@@ -36,15 +35,6 @@ function moduleCopyPlugin() {
                 copySrcFolder('src/templates');
                 copySrcFolder('src/styles');
                 copySrcFolder('src/lang');
-
-                const modulesPath = path.join(process.env.LOCALAPPDATA, '/FoundryVTT/Data/modules/anvil-and-arcana-wfrp4');
-
-                fs.ensureDirSync(modulesPath);
-
-                const srcDir = path.resolve(__dirname, 'dist');
-
-                fs.copySync(srcDir, modulesPath);
-                console.log('Module files copied to:', modulesPath);
             }, 1000)
         }
     }
@@ -52,11 +42,10 @@ function moduleCopyPlugin() {
 
 export default defineConfig({
     plugins: [
-        fileMarkerPlugin(),
         moduleCopyPlugin()
     ],
     build: {
-        minify: false,
+        minify: true,
         rollupOptions: {
             input: {
                 common: './src/init.ts',
