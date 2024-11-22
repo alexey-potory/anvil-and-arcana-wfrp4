@@ -84,20 +84,19 @@ export class CraftApplication extends Application {
         const data = HtmlUtils.getDropEventData<DropEventData>(event);
 
         if (data.type !== 'Item') {
-            return NotificationUtils.warning(LocalizationUtils.localize('...'));
+            return NotificationUtils.warning(LocalizationUtils.localize('ANVIL_AND_ARCANA.Errors.NotAnItem'));
         }
 
         const item = await ItemUtils.getByUuid<ItemDocument>(data.uuid);
 
         if (!item.parent) {
-            // TODO: Commented for testing, uncomment on build
-            // return NotificationUtils.warning(LocalizationUtils.localize('...'));
+            return NotificationUtils.warning(LocalizationUtils.localize('ANVIL_AND_ARCANA.Errors.NotInCharacterInventory'));
         }
 
         if (item.system.quantity?.value > 0) {
             await ItemUtils.updateItemCount(item, item.system.quantity.value - 1);
         } else {
-            return NotificationUtils.warning(LocalizationUtils.localize('...'));
+            return NotificationUtils.warning(LocalizationUtils.localize('ANVIL_AND_ARCANA.Errors.NotEnough'));
         }
 
         this.items.push(item);

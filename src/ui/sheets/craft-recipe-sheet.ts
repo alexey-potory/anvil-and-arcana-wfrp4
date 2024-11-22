@@ -139,7 +139,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
     private async _onComponentsDrop(event: OnDropEvent) {
 
         if (!this.currentData) {
-            throw Error(LocalizationUtils.localize('...'));
+            throw Error('Current data is not available. Something went wrong...');
         }
 
         event.preventDefault();
@@ -167,7 +167,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
     private async _onComponentRemove(event: EventWithDataTarget) {
 
         if (!this.currentData) {
-            throw Error(LocalizationUtils.localize('...'));
+            throw Error('Current data is not available. Something went wrong...');
         }
 
         const index = Number(HtmlUtils.getDataAttribute(event, 'index'));
@@ -181,7 +181,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         const data = HtmlUtils.getDropEventData<DropEventData>(event);
 
         if (data.type !== 'Item') {
-            NotificationUtils.warning(LocalizationUtils.localize('...'));
+            NotificationUtils.warning(LocalizationUtils.localize('ANVIL_AND_ARCANA.Errors.NotAnItem'));
             return;
         }
 
@@ -190,7 +190,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
 
     private async _updateResult(type: ResultType, value: string) {
         if (!this.currentData) {
-            throw Error(LocalizationUtils.localize('...'));
+            throw Error('Current data is not available. Something went wrong...');
         }
 
         await ItemUtils.updateItem(this.currentData, `system.results.${type}Uuid`, value);
@@ -198,7 +198,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
 
     private async _updateComponents(componentsUuids: string[]) {
         if (!this.currentData) {
-            throw Error(LocalizationUtils.localize('...'));
+            throw Error('Current data is not available. Something went wrong...');
         }
 
         const searchHash = HashUtils.createSearchHash(componentsUuids);

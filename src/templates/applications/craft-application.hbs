@@ -1,12 +1,12 @@
 <div class="root content">
     <div class="header">
-        <span>Header</span>
+        <span>{{localize 'ANVIL_AND_ARCANA.CraftApplication.Components.Header'}}</span>
     </div>
     <div class="craft-items-section">
         <ol class="craft-items-list">
             {{#unless items.length}}
             <div class="items-placeholder">
-                <p>Placeholder</p>
+                <p>{{localize 'ANVIL_AND_ARCANA.CraftApplication.Components.Placeholder'}}</p>
             </div>
             {{/unless}}
             {{> modules/anvil-and-arcana-wfrp4/templates/_shared/items-list.hbs items=items}}
@@ -14,6 +14,6 @@
     </div>
 
     {{#if items.length}}
-        <button id="submit" class="trigger-script">Process</button>
+        <button id="submit" class="trigger-script">{{localize 'ANVIL_AND_ARCANA.CraftApplication.Process'}}</button>
     {{/if}}
 </div>

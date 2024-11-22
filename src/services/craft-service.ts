@@ -34,7 +34,7 @@ export default class CraftService {
         const allowedWithoutGM = SettingsUtils.get<boolean>('allowCraftWithoutGM');
 
         if (!gmPresent && !allowedWithoutGM) {
-            NotificationUtils.warning('...')
+            NotificationUtils.warning('ANVIL_AND_ARCANA.Errors.GameMasterNotPresent')
             return false;
         }
 

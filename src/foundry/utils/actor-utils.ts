@@ -9,6 +9,7 @@ import ItemUtils from "./item-utils";
 import {StringUtils} from "../../utils/string-utils";
 import {ExtendedCheckDocument} from "../entities/extended-check-document";
 import SettingsUtils from "./settings-utils";
+import {recipeIconPath} from "../../contracts";
 
 export interface CheckResult {
     succeeded: boolean;
@@ -143,6 +144,7 @@ export default class ActorUtils {
 
         const args = {
             name: `${options.name}: ${test}`,
+            img: recipeIconPath,
             type: 'extendedTest',
             system: {
                 SL: {
