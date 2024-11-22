@@ -59,7 +59,7 @@ export class CraftRecipeModel extends BaseItemModel {
     }
 
     _initializeSystem() {
-        const skills = SkillUtils.getModuleSkills();
+        const skills = SkillUtils.getModuleSkillsDef();
         const skillKey = Object.keys(skills)[0];
 
         DocumentUtils.updateSource(

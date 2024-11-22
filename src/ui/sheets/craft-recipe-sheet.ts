@@ -88,7 +88,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         return {
             selectedType: data.system.check.type,
             selectedSkill: data.system.check.skill,
-            skills: SkillUtils.getModuleSkills(),
+            skills: SkillUtils.getModuleSkillsDef(),
             checkTypes: {
                 Simple: LocalizationUtils.localize("ANVIL_AND_ARCANA.Check.Type.Simple"),
                 Extended: LocalizationUtils.localize("ANVIL_AND_ARCANA.Check.Type.Extended")
