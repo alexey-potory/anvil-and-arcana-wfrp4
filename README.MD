@@ -17,7 +17,10 @@ To install **Anvil and Arcana**:
 1. Open the **Foundry VTT Setup** screen.
 2. Navigate to the **Add-on Modules** tab.
 3. Click on **Install Module**.
-4. In the manifest URL field, paste the following link: `https://github.com/alexey-potory/anvil-and-arcana-wfrp4/releases/latest/download/module.json`
+4. In the manifest URL field, paste the following link:
+   ```
+   https://github.com/alexey-potory/anvil-and-arcana-wfrp4/releases/latest/download/module.json
+   ```
 5. Click **Install** and enable the module in your world settings.
 
 ## Compatibility
