@@ -15,6 +15,7 @@ export class ItemTypes {
     static Skill = new ItemTypes('skill');
     static Cargo = new ItemTypes('cargo');
     static Trapping = new ItemTypes('trapping');
+    static ExtendedTest = new ItemTypes('extendedTest');
 
     static fromItem(item: ItemDocument): ItemTypes {
         if (!item || !item.type) {
@@ -52,4 +53,5 @@ export default interface ItemDocument {
     system: ItemDocumentSystem;
     parent: any;
     update(value: any): Promise<ItemDocument>;
+    createEmbeddedDocuments(type: string, args: any[]): Promise<any>;
 }

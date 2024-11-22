@@ -1,5 +1,4 @@
 import {modulePath} from "../../contracts";
-import ActorDocument from "../../foundry/entities/actor-document";
 import ItemDocument from "../../foundry/entities/item-document";
 import {DropEventData} from "../../foundry/events/drop-event-data";
 import {OnDropEvent} from "../../foundry/events/on-drop-event";
@@ -9,13 +8,10 @@ import HtmlUtils from "../../foundry/utils/html-utils";
 import NotificationUtils from "../../foundry/utils/notification-utils";
 import LocalizationUtils from "../../foundry/utils/localization-utils";
 import ItemUtils from "../../foundry/utils/item-utils";
-import UserUtils from "../../foundry/utils/user-utils";
-import SettingsUtils from "../../foundry/utils/settings-utils";
-import ActorUtils, {Characteristics, CheckResult} from "../../foundry/utils/actor-utils";
+import ActorUtils from "../../foundry/utils/actor-utils";
 import ChatUtils from "../../utils/chat-utils";
-import DialogUtils from "../../utils/dialog-utils";
-import RecipeDocument, {CheckType} from "../../documents/recipe-document";
-import RecipeUtils from "../../utils/recipe-utils";
+import {CheckType} from "../../documents/recipe-document";
+import CraftService from "../../services/craft-service";
 
 // @ts-ignore
 export class CraftApplication extends Application {
@@ -107,7 +103,7 @@ export class CraftApplication extends Application {
     }
 
     private async _onSubmit() {
-        if (!this._checkIfAllowed())
+        if (!CraftService.isCraftAllowed)
             return;
 
         const actor = await ActorUtils.getActor();
@@ -115,7 +111,7 @@ export class CraftApplication extends Application {
         if (!actor)
             return;
 
-        const recipe = await this._chooseRecipe();
+        const recipe = await CraftService._chooseRecipe(this.items);
 
         if (!recipe) {
             await ChatUtils.postBadRecipeMessage();
@@ -124,96 +120,18 @@ export class CraftApplication extends Application {
         }
 
         if (recipe.system.check.type === CheckType.Simple) {
-            const result = await this._performInstantCheck(actor, recipe);
+            const result = await CraftService._performInstantCheck(actor, recipe);
 
             if (!result) {
                 return;
             }
 
-            await this._handleResult(actor, recipe, result);
+            await CraftService._handleResult(actor, recipe, result);
+        } else {
+
         }
 
         this._clear();
-    }
-
-    private _checkIfAllowed() : boolean {
-
-        const gmPresent = UserUtils.isActiveGMPresent();
-        const allowedWithoutGM = SettingsUtils.get<boolean>('allowCraftWithoutGM');
-
-        if (!gmPresent && !allowedWithoutGM) {
-            NotificationUtils.warning('...')
-            return false;
-        }
-
-        return true;
-    }
-
-    private async _chooseRecipe() : Promise<RecipeDocument | null> {
-
-        const matchingRecipes = RecipeUtils.getByComponents(this.items);
-
-        if (matchingRecipes.length === 0) {
-            return null;
-        }
-
-        if (matchingRecipes.length === 1) {
-            return matchingRecipes[0];
-        }
-
-        return await DialogUtils.itemChooseDialog<RecipeDocument>({
-            title: LocalizationUtils.localize('ANVIL_AND_ARCANA.Dialogs.SelectRecipe.Header'),
-            submitLabel: LocalizationUtils.localize('ANVIL_AND_ARCANA.Dialogs.SelectRecipe.Submit'),
-            cancelLabel: LocalizationUtils.localize('ANVIL_AND_ARCANA.Dialogs.SelectRecipe.Cancel'),
-            items: matchingRecipes
-        });
-    }
-
-    private async _performInstantCheck(actor: ActorDocument, recipe: RecipeDocument) : Promise<CheckResult | undefined> {
-
-        return await ActorUtils.performInstantCheck(actor,{
-            skill: LocalizationUtils.localize(recipe.system.check.skill),
-            modifier: recipe.system.check.simple.modifier,
-            fallbackStat: Characteristics.Dexterity
-        });
-    }
-
-    private async _performExtendedCheck() {
-
-    }
-
-    private async _handleResult(actor: ActorDocument, recipe: RecipeDocument, checkResult: CheckResult) {
-        const resultId = checkResult.succeeded ?
-            recipe.system.results.successUuid :
-            recipe.system.results.failUuid;
-
-        const item = await ItemUtils.getByUuid<ItemDocument>(resultId);
-
-        if (checkResult.succeeded) {
-            await this._handleSuccess(actor, item);
-        } else {
-            await this._handleFail(actor, item);
-        }
-    }
-
-    private async _handleSuccess(actor: ActorDocument, itemPrototype: ItemDocument | undefined) {
-        const resultUuid = await this._handleItemCreation(actor, itemPrototype);
-        await ChatUtils.postSuccessMessage(resultUuid);
-    }
-
-    private async _handleFail(actor: ActorDocument, itemPrototype: ItemDocument | undefined) {
-        const resultUuid = await this._handleItemCreation(actor, itemPrototype);
-        await ChatUtils.postFailMessage(resultUuid);
-    }
-
-    private async _handleItemCreation(actor: ActorDocument, itemPrototype: ItemDocument | undefined) {
-        if (!itemPrototype) {
-            return undefined;
-        }
-
-        const item = await ActorUtils.findOrCreateItem(actor, itemPrototype);
-        await ItemUtils.updateItemCount(item, item.system.quantity.value + 1);
-        return item.uuid;
     }
 
     private _clear() {

@@ -77,10 +77,15 @@ export default class ActorUtils {
     }
 
     static async addRecordOfItem(actor: ActorDocument, itemPrototype: ItemDocument) : Promise<ItemDocument> {
-        const documents = await actor
-            .createEmbeddedDocuments("Item", [ObjectUtils.castToObject(itemPrototype)]) as ItemDocument[];
+        const item = await this.CreateItem(actor, itemPrototype);
+        await ItemUtils.updateItemCount(item, 0);
+        return item;
+    }
 
-        await ItemUtils.updateItemCount(documents[0], 0);
+    static async CreateItem(actor: ActorDocument, itemPrototype: ItemDocument) : Promise<ItemDocument> {
+        const documents =
+            await actor.createEmbeddedDocuments("Item", [ObjectUtils.castToObject(itemPrototype)]) as ItemDocument[];
+
         return documents[0];
     }
 
