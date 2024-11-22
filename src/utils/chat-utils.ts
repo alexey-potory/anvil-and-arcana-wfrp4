@@ -8,6 +8,10 @@ export default class ChatUtils {
         await this.postMessage(`<b style="color: ${errorColor}">${LocalizationUtils.localize("ANVIL_AND_ARCANA.Chat.Messages.BadRecipe")}</b>`);
     }
 
+    static async postCheckFailedMessage() {
+        await this.postMessage(`<b style="color: ${errorColor}">${LocalizationUtils.localize("ANVIL_AND_ARCANA.Chat.Messages.CheckFailed")}</b>`);
+    }
+
     static async postMessage(content: string) {
         // @ts-ignore
         await ChatMessage.create(

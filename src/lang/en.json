@@ -23,6 +23,7 @@
 
     "ANVIL_AND_ARCANA.Chat.Speaker": "Crafting",
     "ANVIL_AND_ARCANA.Chat.Messages.BadRecipe": "It seems these ingredients cannot create a meaningful combination. Maybe try something else?",
+    "ANVIL_AND_ARCANA.Chat.Messages.CheckFailed": "You feel like this is a correct recipe, but maybe you just not skilled enough?",
 
     "ANVIL_AND_ARCANA.Dialogs.SelectRecipe.Header": "Select recipe",
     "ANVIL_AND_ARCANA.Dialogs.SelectRecipe.Submit": "OK",

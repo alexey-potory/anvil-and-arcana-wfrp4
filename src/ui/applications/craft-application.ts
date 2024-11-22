@@ -12,7 +12,7 @@ import DocumentUtils from "../../foundry/utils/document-utils";
 import ItemUtils from "../../foundry/utils/item-utils";
 import UserUtils from "../../foundry/utils/user-utils";
 import SettingsUtils from "../../foundry/utils/settings-utils";
-import ActorUtils from "../../foundry/utils/actor-utils";
+import ActorUtils, {Characteristics} from "../../foundry/utils/actor-utils";
 import ArrayUtils from "../../utils/array-utils";
 import HashUtils from "../../utils/hash-utils";
 import ChatUtils from "../../utils/chat-utils";
@@ -106,12 +106,8 @@ export class CraftApplication extends Application {
 
     async _onSubmit() {
 
-        const gmPresent = UserUtils.isActiveGMPresent();
-        const allowedWithoutGM = SettingsUtils.get<boolean>('allowCraftWithoutGM');
-
-        if (!gmPresent && !allowedWithoutGM) {
-            return NotificationUtils.warning('...')
-        }
+        if (!this._checkIfAllowed())
+            return;
 
         const actor = await this._chooseActor();
 
@@ -125,7 +121,26 @@ export class CraftApplication extends Application {
             return;
         }
 
-        const skill = ActorUtils.getSkill(actor, recipe.system.check.skill);
+        const checkResult = await this._performCheck(actor, recipe);
+
+        if (!checkResult) {
+            return;
+        }
+
+        
+    }
+
+    _checkIfAllowed() : boolean {
+
+        const gmPresent = UserUtils.isActiveGMPresent();
+        const allowedWithoutGM = SettingsUtils.get<boolean>('allowCraftWithoutGM');
+
+        if (!gmPresent && !allowedWithoutGM) {
+            NotificationUtils.warning('...')
+            return false;
+        }
+
+        return true;
     }
 
     async _chooseRecipe() : Promise<RecipeDocument | null> {
@@ -179,6 +194,25 @@ export class CraftApplication extends Application {
             return null;
 
         return choice;
+    }
+
+    async _performCheck(actor: ActorDocument, recipe: RecipeDocument) : Promise<number | undefined> {
+        const checkResult = await ActorUtils.performInstantCheck(actor,{
+            skill: LocalizationUtils.localize(recipe.system.check.skill),
+            modifier: recipe.system.check.simple.modifier,
+            fallbackStat: Characteristics.Dexterity
+        });
+
+        if (checkResult === undefined) {
+            return;
+        }
+
+        if (!checkResult.succeed) {
+            await ChatUtils.postCheckFailedMessage();
+            return;
+        }
+
+        return checkResult.SL;
     }
 
     render(force: boolean = false) {
