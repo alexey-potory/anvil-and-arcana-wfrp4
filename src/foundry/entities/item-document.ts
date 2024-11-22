@@ -47,7 +47,6 @@ export class ItemTypes {
 
 export default interface ItemDocument {
     uuid: string;
-    _id: string;
     name: string;
     type: string | ItemTypes;
     system: ItemDocumentSystem;

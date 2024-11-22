@@ -1,13 +1,12 @@
-import { modulePath } from "../../contracts";
+import {modulePath} from "../../contracts";
 import ItemDocument from "../../foundry/entities/item-document";
-import { DropEventData } from "../../foundry/events/drop-event-data";
-import { OnDropEvent } from "../../foundry/events/on-drop-event";
-import HtmlUtils, { EventWithDataTarget } from "../../foundry/utils/html-utils";
+import {DropEventData} from "../../foundry/events/drop-event-data";
+import {OnDropEvent} from "../../foundry/events/on-drop-event";
+import HtmlUtils, {EventWithDataTarget} from "../../foundry/utils/html-utils";
 import SkillUtils from "../../utils/skill-utils";
 import LocalizationUtils from "../../foundry/utils/localization-utils";
 import ItemUtils from "../../foundry/utils/item-utils";
 import NotificationUtils from "../../foundry/utils/notification-utils";
-import DocumentUtils from "../../foundry/utils/document-utils";
 import HashUtils from "../../utils/hash-utils";
 import RecipeDocument from "../../documents/recipe-document";
 
@@ -67,24 +66,20 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         html.find(".item-remove").click(this._onComponentRemove.bind(this));
     }
 
-    async getData(options: any) {
+    async getData(options: RecipeDocument) {
 
         const data = await super.getData();
         
         this.currentData = data.document;
 
-        const components = this._getRecipeComponents(data);
-        const results =  this._getRecipeResults(data);
-        const check = this._getRecipeCheck(data);
-
-        data.check = check;
-        data.results = results;
-        data.components = components;
+        data.check = this._getRecipeCheck(data);
+        data.results = this._getRecipeResults(data);
+        data.components = await this._getRecipeComponents(data);
 
         return data;
     }
 
-    private _getRecipeCheck(data: any) : CraftRecipeCheck {
+    private _getRecipeCheck(data: RecipeDocument) : CraftRecipeCheck {
         return {
             selectedType: data.system.check.type,
             selectedSkill: data.system.check.skill,
@@ -101,18 +96,19 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         }
     }
 
-    private _getRecipeComponents(data: any) : ItemDocument[] {
-        const components: string[] = data.system.components;
-        return components?.map(id => ItemUtils.get<ItemDocument>(id));
+    private async _getRecipeComponents(data: RecipeDocument) : Promise<ItemDocument[]> {
+        const components: string[] = data.system.componentsUuids;
+        const documents =  await Promise.all(components?.map(id => ItemUtils.getByUuid<ItemDocument>(id)));
+        return documents;
     }
 
-    private _getRecipeResults(data: any) : CraftRecipeResults {
-        const successId = data.system.results?.success;
-        const failId = data.system.results?.fail;
+    private _getRecipeResults(data: RecipeDocument) : CraftRecipeResults {
+        const successId = data.system.results?.successUuid;
+        const failId = data.system.results?.failUuid;
 
         return {
-            success: ItemUtils.find(item => item._id === successId),
-            fail: ItemUtils.find(item => item._id === failId)
+            success: ItemUtils.find(item => item.uuid === successId),
+            fail: ItemUtils.find(item => item.uuid === failId)
         }
     }
 
@@ -125,7 +121,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
             return;
         }
 
-        await this._updateResult(ResultType.Success, item._id);
+        await this._updateResult(ResultType.Success, item.uuid);
     }
 
     private async _onFailDrop(event: OnDropEvent) {
@@ -137,7 +133,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
             return;
         }
 
-        await this._updateResult(ResultType.Fail, item._id);
+        await this._updateResult(ResultType.Fail, item.uuid);
     }
 
     private async _onComponentsDrop(event: OnDropEvent) {
@@ -154,8 +150,8 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
             return;
         }
 
-        const components = this.currentData.system.components || [];
-        components.push(item._id);
+        const components = this.currentData.system.componentsUuids || [];
+        components.push(item.uuid);
 
         await this._updateComponents(components);
     }
@@ -175,7 +171,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         }
 
         const index = Number(HtmlUtils.getDataAttribute(event, 'index'));
-        const components = this.currentData.system.components || [];
+        const components = this.currentData.system.componentsUuids || [];
 
         components.splice(index, 1);
         await this._updateComponents(components);
@@ -189,7 +185,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
             return;
         }
 
-        return await DocumentUtils.getByUuid<ItemDocument>(data.uuid);
+        return await ItemUtils.getByUuid<ItemDocument>(data.uuid);
     }
 
     private async _updateResult(type: ResultType, value: string) {
@@ -197,19 +193,19 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
             throw Error(LocalizationUtils.localize('...'));
         }
 
-        await ItemUtils.updateItem(this.currentData, `system.results.${type}`, value);
+        await ItemUtils.updateItem(this.currentData, `system.results.${type}Uuid`, value);
     }
 
-    private async _updateComponents(components: string[]) {
+    private async _updateComponents(componentsUuids: string[]) {
         if (!this.currentData) {
             throw Error(LocalizationUtils.localize('...'));
         }
 
-        const searchHash = HashUtils.createSearchHash(components);
+        const searchHash = HashUtils.createSearchHash(componentsUuids);
 
         const update = {
             searchHash,
-            components
+            componentsUuids
         };
         
         await ItemUtils.updateItem(this.currentData, "system", update);

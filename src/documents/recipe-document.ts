@@ -2,17 +2,21 @@ import ItemDocument, {ItemDocumentSystem} from "../foundry/entities/item-documen
 
 export default interface RecipeDocument extends ItemDocument {
     system: ItemDocumentSystem & {
-        components: string[]
+        componentsUuids: string[]
         check: {
             skill: string;
             type: 'Simple' | 'Extended'
             simple: {
                 modifier: number
             }
+            extended: {
+                difficulty: string;
+                sl: string;
+            }
         },
         results: {
-            success: string
-            fail: string
+            successUuid: string
+            failUuid: string
         }
     };
 }

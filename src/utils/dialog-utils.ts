@@ -25,7 +25,7 @@ export default class DialogUtils {
                         //@ts-ignore
                         callback: (html) => {
                             const itemId = html.find("#item-select").val();
-                            resolve(options.items.find(item => item._id === itemId) as T);
+                            resolve(options.items.find(item => item.uuid === itemId) as T);
                         }
                     },
                     cancel: {

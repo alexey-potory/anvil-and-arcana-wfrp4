@@ -8,7 +8,6 @@ import ObjectUtils from "../../foundry/utils/object-utils";
 import HtmlUtils from "../../foundry/utils/html-utils";
 import NotificationUtils from "../../foundry/utils/notification-utils";
 import LocalizationUtils from "../../foundry/utils/localization-utils";
-import DocumentUtils from "../../foundry/utils/document-utils";
 import ItemUtils from "../../foundry/utils/item-utils";
 import UserUtils from "../../foundry/utils/user-utils";
 import SettingsUtils from "../../foundry/utils/settings-utils";
@@ -80,7 +79,7 @@ export class CraftApplication extends Application {
             return NotificationUtils.warning(LocalizationUtils.localize('...'));
         }
 
-        const item = await DocumentUtils.getByUuid<ItemDocument>(data.uuid);
+        const item = await ItemUtils.getByUuid<ItemDocument>(data.uuid);
 
         if (!item.parent) {
             // TODO: Commented for testing, uncomment on build
@@ -127,10 +126,10 @@ export class CraftApplication extends Application {
             return;
 
         const resultId = checkResult.succeeded ?
-            recipe.system.results.success :
-            recipe.system.results.fail;
+            recipe.system.results.successUuid :
+            recipe.system.results.failUuid;
 
-        const item = ItemUtils.get<ItemDocument>(resultId);
+        const item = await ItemUtils.getByUuid<ItemDocument>(resultId);
 
         if (checkResult.succeeded) {
             await this._handleInstantSuccess(actor, item);

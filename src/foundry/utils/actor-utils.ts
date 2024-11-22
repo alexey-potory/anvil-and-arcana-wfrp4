@@ -5,6 +5,7 @@ import LocalizationUtils from "./localization-utils";
 import DialogUtils from "../../utils/dialog-utils";
 import ItemDocument, {ItemTypes} from "../entities/item-document";
 import ObjectUtils from "./object-utils";
+import ItemUtils from "./item-utils";
 
 export interface CheckResult {
     succeeded: boolean;
@@ -69,14 +70,18 @@ export default class ActorUtils {
             this.findItem<ItemDocument>(actor, itemPrototype.name, ItemTypes.fromItem(itemPrototype));
 
         if (existing === undefined) {
-            return await this.addCopyOfItem(actor, itemPrototype);
+            return await this.addRecordOfItem(actor, itemPrototype);
         }
 
         return existing;
     }
 
-    static async addCopyOfItem(actor: ActorDocument, itemPrototype: ItemDocument) : Promise<ItemDocument> {
-        return await actor.createEmbeddedDocuments("Item", [ObjectUtils.castToObject(itemPrototype)]) as ItemDocument;
+    static async addRecordOfItem(actor: ActorDocument, itemPrototype: ItemDocument) : Promise<ItemDocument> {
+        const documents = await actor
+            .createEmbeddedDocuments("Item", [ObjectUtils.castToObject(itemPrototype)]) as ItemDocument[];
+
+        await ItemUtils.updateItemCount(documents[0], 0);
+        return documents[0];
     }
 
     static async performInstantCheck(actor: ActorDocument, options: InstantCheckOptions) : Promise<CheckResult | undefined> {

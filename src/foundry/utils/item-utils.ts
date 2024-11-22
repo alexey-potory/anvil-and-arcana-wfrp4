@@ -35,4 +35,14 @@ export default class ItemUtils {
         // @ts-ignore
         return game.items.filter(func);
     }
+
+    static update(source: any, update: any) {
+        source.updateSource(update);
+    }
+
+    static async getByUuid<T>(uuid: string) : Promise<T> {
+        // @ts-ignore
+        const item = await fromUuid(uuid);
+        return item as T;
+    }
 }
