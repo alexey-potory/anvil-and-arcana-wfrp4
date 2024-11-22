@@ -1,15 +1,26 @@
-import { recipeIconPath } from "../contracts";
+import {modulePath, recipeIconPath} from "../contracts";
 import LocalizationUtils from "../foundry/utils/localization-utils";
-
-const errorColor = '#ad0000';
+import TemplateUtils from "../foundry/utils/template-utils";
 
 export default class ChatUtils {
+
+    static init() {
+        TemplateUtils.loadTemplates([
+            `${modulePath}/templates/messages/bad-recipe-message.hbs`,
+            `${modulePath}/templates/messages/check-failed-message.hbs`
+        ]);
+    }
+
+    static async postSuccessMessage(resultUuid: string | undefined) {
+
+    }
+
     static async postBadRecipeMessage() {
-        await this.postMessage(`<b style="color: ${errorColor}">${LocalizationUtils.localize("ANVIL_AND_ARCANA.Chat.Messages.BadRecipe")}</b>`);
+        await this.postMessage(await TemplateUtils.render(`${modulePath}/templates/messages/bad-recipe-message.hbs`));
     }
 
     static async postCheckFailedMessage() {
-        await this.postMessage(`<b style="color: ${errorColor}">${LocalizationUtils.localize("ANVIL_AND_ARCANA.Chat.Messages.CheckFailed")}</b>`);
+        await this.postMessage(await TemplateUtils.render(`${modulePath}/templates/messages/check-failed-message.hbs`));
     }
 
     static async postMessage(content: string) {

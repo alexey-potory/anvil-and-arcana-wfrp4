@@ -8,4 +8,9 @@ export default class TemplateUtils {
         //@ts-ignore
         Handlebars.registerHelper(name, fn);
     }
+
+    static async render(path: string, args: any = undefined) : Promise<string> {
+        //@ts-ignore
+        return await renderTemplate(path, args);
+    }
 }

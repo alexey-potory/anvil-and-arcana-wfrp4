@@ -7,6 +7,7 @@ import CustomTypeUtils from "./foundry/utils/custom-type-utils";
 import HandlebarsUtils from "./foundry/utils/template-utils";
 import SettingsUtils from "./foundry/utils/settings-utils";
 import LocalizationUtils from "./foundry/utils/localization-utils";
+import ChatUtils from "./utils/chat-utils";
 
 HookUtils.onInit(() => {
 
@@ -46,6 +47,8 @@ HookUtils.onInit(() => {
         requiresReload: true,
         default: false
     });
+
+    ChatUtils.init();
 });
 
 HookUtils.onReady(() => {

@@ -198,3 +198,11 @@
 .craft-item-controls .item-control {
     font-size: 1.5em
 }
+
+.chat-message-success {
+    color: #00802a
+}
+
+.chat-message-error {
+    color: #ad0000
+}
