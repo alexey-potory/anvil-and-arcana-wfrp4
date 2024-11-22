@@ -13,11 +13,10 @@ import ItemUtils from "../../foundry/utils/item-utils";
 import UserUtils from "../../foundry/utils/user-utils";
 import SettingsUtils from "../../foundry/utils/settings-utils";
 import ActorUtils, {Characteristics, CheckResult} from "../../foundry/utils/actor-utils";
-import ArrayUtils from "../../utils/array-utils";
-import HashUtils from "../../utils/hash-utils";
 import ChatUtils from "../../utils/chat-utils";
 import DialogUtils from "../../utils/dialog-utils";
 import RecipeDocument from "../../documents/recipe-document";
+import RecipeUtils from "../../utils/recipe-utils";
 
 // @ts-ignore
 export class CraftApplication extends Application {
@@ -113,17 +112,15 @@ export class CraftApplication extends Application {
         if (!this._checkIfAllowed())
             return;
 
-        const actor = await this._chooseActor();
+        const actor = await ActorUtils.getActor();
 
-        if (!actor) {
+        if (!actor)
             return;
-        }
 
         const recipe = await this._chooseRecipe();
 
-        if (!recipe) {
+        if (!recipe)
             return;
-        }
 
         const checkResult = await this._performCheck(actor, recipe);
 
@@ -160,12 +157,8 @@ export class CraftApplication extends Application {
     }
 
     private async _chooseRecipe() : Promise<RecipeDocument | null> {
-        const ids = this.items.map(item => ItemUtils.findPrototypeByName(item)._id);
 
-        const searchHash = HashUtils.createSearchHash(ids);
-
-        const matchingRecipes = ItemUtils.findBySearchHash<RecipeDocument>(searchHash)
-            .filter(recipe => ArrayUtils.araMatching(ids, recipe.system.components));
+        const matchingRecipes = RecipeUtils.getByComponents(this.items);
 
         if (matchingRecipes.length === 0) {
             this.items = [];
@@ -185,31 +178,6 @@ export class CraftApplication extends Application {
             cancelLabel: LocalizationUtils.localize('ANVIL_AND_ARCANA.Dialogs.SelectRecipe.Cancel'),
             items: matchingRecipes
         });
-    }
-
-    private async _chooseActor() : Promise<ActorDocument | null> {
-        const actors = ActorUtils.getAvailableActors();
-
-        if (!actors || actors.length === 0) {
-            NotificationUtils.warning(LocalizationUtils.localize("ANVIL_AND_ARCANA.Errors.NoAvailableCharacter"))
-            return null;
-        }
-
-        if (actors.length === 1) {
-            return actors[0];
-        }
-        
-        const choice = await DialogUtils.itemChooseDialog<ActorDocument>({
-            title: LocalizationUtils.localize('ANVIL_AND_ARCANA.Dialogs.SelectActor.Header'),
-            submitLabel: LocalizationUtils.localize('ANVIL_AND_ARCANA.Dialogs.SelectActor.Submit'),
-            cancelLabel: LocalizationUtils.localize('ANVIL_AND_ARCANA.Dialogs.SelectActor.Cancel'),
-            items: actors
-        });
-
-        if (!choice)
-            return null;
-
-        return choice;
     }
 
     private async _performCheck(actor: ActorDocument, recipe: RecipeDocument) : Promise<CheckResult | undefined> {

@@ -1,6 +1,8 @@
 import ActorDocument, {ActorTest} from "../entities/actor-document";
 import SkillDocument from "../entities/skill-document";
 import NotificationUtils from "./notification-utils";
+import LocalizationUtils from "./localization-utils";
+import DialogUtils from "../../utils/dialog-utils";
 
 export interface CheckResult {
     succeeded: boolean;
@@ -27,6 +29,30 @@ export enum Characteristics {
 }
 
 export default class ActorUtils {
+    static async getActor() : Promise<ActorDocument | null> {
+        const actors = ActorUtils.getAvailableActors();
+
+        if (!actors || actors.length === 0) {
+            NotificationUtils.warning(LocalizationUtils.localize("ANVIL_AND_ARCANA.Errors.NoAvailableCharacter"))
+            return null;
+        }
+
+        if (actors.length === 1) {
+            return actors[0];
+        }
+
+        const choice = await DialogUtils.itemChooseDialog<ActorDocument>({
+            title: LocalizationUtils.localize('ANVIL_AND_ARCANA.Dialogs.SelectActor.Header'),
+            submitLabel: LocalizationUtils.localize('ANVIL_AND_ARCANA.Dialogs.SelectActor.Submit'),
+            cancelLabel: LocalizationUtils.localize('ANVIL_AND_ARCANA.Dialogs.SelectActor.Cancel'),
+            items: actors
+        });
+
+        if (!choice)
+            return null;
+
+        return choice;
+    }
     static getAvailableActors() : ActorDocument[] {
         // @ts-ignore
         return game.user.isGM ? game.actors : [game.user.character];
