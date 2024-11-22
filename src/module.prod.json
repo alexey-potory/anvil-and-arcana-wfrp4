@@ -1,12 +1,12 @@
 {
   "id": "anvil-and-arcana-wfrp4",
   "title": "Anvil and Arcana",
-  "version": "develop",
+  "version": "#{VERSION}#",
   "compatibility": {
     "minimum": "12",
     "verified": "12"
   },
-  "description": "This is a development version of 'Anvil and Arcana' module for VTT Foundry",
+  "description": "'Anvil and Arcana' is a Foundry VTT module for the Warhammer Fantasy 4th Edition system that offers an intuitive system for creating recipes and crafting items based on those recipes.",
   "authors": [
     {
       "name": "apotory",
@@ -41,5 +41,8 @@
     "Item": {
       "recipe": {}
     }
-  }
+  },
+  "url": "#{URL}#",
+  "manifest": "#{MANIFEST}#",
+  "download": "#{DOWNLOAD}#"
 }
