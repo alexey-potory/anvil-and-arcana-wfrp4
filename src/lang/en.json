@@ -22,8 +22,11 @@
     "ANVIL_AND_ARCANA.Recipe.Components.Placeholder": "Add components...",
 
     "ANVIL_AND_ARCANA.Chat.Speaker": "Crafting",
-    "ANVIL_AND_ARCANA.Chat.Messages.BadRecipe": "It seems these ingredients cannot create a meaningful combination. Maybe try something else?",
-    "ANVIL_AND_ARCANA.Chat.Messages.CheckFailed": "You feel like this is a correct recipe, but maybe you just not skilled enough?",
+    "ANVIL_AND_ARCANA.Chat.Messages.BadRecipe": "These ingredients don't seem to create a meaningful combination. Perhaps try something different?",
+    "ANVIL_AND_ARCANA.Chat.Messages.CheckPassed": "You've successfully completed the creation process.",
+    "ANVIL_AND_ARCANA.Chat.Messages.CheckFailed": "You feel like this recipe is correct, but maybe you're not skilled enough yet?",
+    "ANVIL_AND_ARCANA.Chat.Messages.SuccessItemReceived": "As a result, you've got an item",
+    "ANVIL_AND_ARCANA.Chat.Messages.FailItemReceived": "As a result, you've got an item",
 
     "ANVIL_AND_ARCANA.Dialogs.SelectRecipe.Header": "Select recipe",
     "ANVIL_AND_ARCANA.Dialogs.SelectRecipe.Submit": "OK",

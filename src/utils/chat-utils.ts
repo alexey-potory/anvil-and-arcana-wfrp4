@@ -11,16 +11,22 @@ export default class ChatUtils {
         ]);
     }
 
-    static async postSuccessMessage(resultUuid: string | undefined) {
-
-    }
-
     static async postBadRecipeMessage() {
         await this.postMessage(await TemplateUtils.render(`${modulePath}/templates/messages/bad-recipe-message.hbs`));
     }
 
-    static async postCheckFailedMessage() {
-        await this.postMessage(await TemplateUtils.render(`${modulePath}/templates/messages/check-failed-message.hbs`));
+    static async postSuccessMessage(resultUuid: string | undefined) {
+        await this.postMessage(await TemplateUtils.render(
+            `${modulePath}/templates/messages/check-passed-message.hbs`,
+            { result: resultUuid}
+        ));
+    }
+
+    static async postFailMessage(resultUuid: string | undefined) {
+        await this.postMessage(await TemplateUtils.render(
+            `${modulePath}/templates/messages/check-failed-message.hbs`,
+            { result: resultUuid}
+        ));
     }
 
     static async postMessage(content: string) {

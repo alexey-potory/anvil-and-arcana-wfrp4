@@ -14,4 +14,5 @@ export default interface ActorDocument extends ItemDocument {
     items: ItemDocument[];
     setupSkill(skill: ItemDocument, options:any): Promise<ActorTest>;
     setupCharacteristic(characteristic: string, options: any): Promise<ActorTest>;
+    createEmbeddedDocuments(type: string, args: any[]): Promise<any>;
 }

@@ -108,7 +108,6 @@ export class CraftApplication extends Application {
     }
 
     private async _onSubmit() {
-
         if (!this._checkIfAllowed())
             return;
 
@@ -127,19 +126,16 @@ export class CraftApplication extends Application {
         if (checkResult === undefined)
             return;
 
-        let resultId: string;
-
-        resultId = checkResult.succeeded ?
+        const resultId = checkResult.succeeded ?
             recipe.system.results.success :
             recipe.system.results.fail;
 
         const item = ItemUtils.get<ItemDocument>(resultId);
 
-        if (checkResult) {
-            // TODO: Success
+        if (checkResult.succeeded) {
+            await this._handleInstantSuccess(actor, item);
         } else {
-            // TODO: Fail
-            await ChatUtils.postCheckFailedMessage();
+            await this._handleInstantFail(actor, item);
         }
     }
 
@@ -186,5 +182,25 @@ export class CraftApplication extends Application {
             modifier: recipe.system.check.simple.modifier,
             fallbackStat: Characteristics.Dexterity
         });
+    }
+
+    private async _handleInstantSuccess(actor: ActorDocument, itemPrototype: ItemDocument | undefined) {
+        const resultUuid = await this._handleResultItem(actor, itemPrototype);
+        await ChatUtils.postSuccessMessage(resultUuid);
+    }
+
+    private async _handleInstantFail(actor: ActorDocument, itemPrototype: ItemDocument | undefined) {
+        const resultUuid = await this._handleResultItem(actor, itemPrototype);
+        await ChatUtils.postFailMessage(resultUuid);
+    }
+
+    private async _handleResultItem(actor: ActorDocument, itemPrototype: ItemDocument | undefined) {
+        if (!itemPrototype) {
+            return undefined;
+        }
+
+        const item = await ActorUtils.findOrCreateItem(actor, itemPrototype);
+        await ItemUtils.updateItemCount(item, item.system.quantity.value + 1);
+        return item.uuid;
     }
 }

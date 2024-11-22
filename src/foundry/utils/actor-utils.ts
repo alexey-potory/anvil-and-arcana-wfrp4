@@ -3,6 +3,8 @@ import SkillDocument from "../entities/skill-document";
 import NotificationUtils from "./notification-utils";
 import LocalizationUtils from "./localization-utils";
 import DialogUtils from "../../utils/dialog-utils";
+import ItemDocument, {ItemTypes} from "../entities/item-document";
+import ObjectUtils from "./object-utils";
 
 export interface CheckResult {
     succeeded: boolean;
@@ -58,13 +60,28 @@ export default class ActorUtils {
         return game.user.isGM ? game.actors : [game.user.character];
     }
 
-    static getSkill(actor: ActorDocument, skillName: string) : SkillDocument | undefined {
-        return actor.items.find(skill => skill.name === skillName) as SkillDocument;
+    static findItem<T>(actor: ActorDocument, name: string, type: ItemTypes) : T | undefined {
+        return actor.items.find(item => item.name === name && type.equals(item.type)) as T;
+    }
+
+    static async findOrCreateItem<T>(actor: ActorDocument, itemPrototype: ItemDocument) : Promise<ItemDocument> {
+        let existing =
+            this.findItem<ItemDocument>(actor, itemPrototype.name, ItemTypes.fromItem(itemPrototype));
+
+        if (existing === undefined) {
+            return await this.addCopyOfItem(actor, itemPrototype);
+        }
+
+        return existing;
+    }
+
+    static async addCopyOfItem(actor: ActorDocument, itemPrototype: ItemDocument) : Promise<ItemDocument> {
+        return await actor.createEmbeddedDocuments("Item", [ObjectUtils.castToObject(itemPrototype)]) as ItemDocument;
     }
 
     static async performInstantCheck(actor: ActorDocument, options: InstantCheckOptions) : Promise<CheckResult | undefined> {
 
-        const skill = this.getSkill(actor, options.skill);
+        const skill = this.findItem<SkillDocument>(actor, options.skill, ItemTypes.Skill);
 
         if (!skill && !options.fallbackStat) {
             NotificationUtils.warning('This character cannot perform the check. Please ensure they have the required skill.');
