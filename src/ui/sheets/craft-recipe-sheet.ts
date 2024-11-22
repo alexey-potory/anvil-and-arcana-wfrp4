@@ -1,5 +1,5 @@
 import { modulePath } from "../../contracts";
-import { ItemDocument, RecipeDocument } from "../../foundry/entities/item-document";
+import ItemDocument from "../../foundry/entities/item-document";
 import { DropEventData } from "../../foundry/events/drop-event-data";
 import { OnDropEvent } from "../../foundry/events/on-drop-event";
 import HtmlUtils, { EventWithDataTarget } from "../../foundry/utils/html-utils";
@@ -9,6 +9,7 @@ import ItemUtils from "../../foundry/utils/item-utils";
 import NotificationUtils from "../../foundry/utils/notification-utils";
 import DocumentUtils from "../../foundry/utils/document-utils";
 import HashUtils from "../../utils/hash-utils";
+import RecipeDocument from "../../documents/recipe-document";
 
 enum ResultType {
     Fail = 'fail',

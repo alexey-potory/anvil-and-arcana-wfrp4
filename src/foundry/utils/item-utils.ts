@@ -1,4 +1,4 @@
-import { ItemDocument } from "../entities/item-document";
+import ItemDocument from "../entities/item-document";
 
 type FindPredicate = (item: ItemDocument) => boolean;
 

@@ -1,5 +1,5 @@
 import { modulePath } from "../contracts";
-import { ItemDocument } from "../foundry/entities/item-document";
+import ItemDocument from "../foundry/entities/item-document";
 
 export interface ChooseDialogueOptions<T> {
     title: string;

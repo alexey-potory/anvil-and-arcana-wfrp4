@@ -1,6 +1,6 @@
 import {modulePath} from "../../contracts";
-import {ActorDocument} from "../../foundry/entities/actor-document";
-import {ItemDocument, RecipeDocument} from "../../foundry/entities/item-document";
+import ActorDocument from "../../foundry/entities/actor-document";
+import ItemDocument from "../../foundry/entities/item-document";
 import {DropEventData} from "../../foundry/events/drop-event-data";
 import {OnDropEvent} from "../../foundry/events/on-drop-event";
 import {OnTargetedEvent} from "../../foundry/events/on-target-event";
@@ -17,6 +17,7 @@ import ArrayUtils from "../../utils/array-utils";
 import HashUtils from "../../utils/hash-utils";
 import ChatUtils from "../../utils/chat-utils";
 import DialogUtils from "../../utils/dialog-utils";
+import RecipeDocument from "../../documents/recipe-document";
 
 // @ts-ignore
 export class CraftApplication extends Application {
@@ -123,7 +124,6 @@ export class CraftApplication extends Application {
         if (!recipe) {
             return;
         }
-
 
         const skill = ActorUtils.getSkill(actor, recipe.system.check.skill);
     }

@@ -1,5 +1,5 @@
-import { ActorDocument } from "../entities/actor-document";
-import { RecipeDocument } from "../entities/item-document";
+import ActorDocument from "../entities/actor-document";
+import RecipeDocument from "../entities/item-document";
 
 export interface InstantCheckOptions {
     actor: ActorDocument;
@@ -28,6 +28,7 @@ export function performExtendedCheck() : boolean {
 }
 
 function _instantRollArgs(options: InstantCheckOptions) : any {
+    //@ts-ignore
     return { fields: {modifier: options.recipe.system.check.simple.modifier } };
 }
 

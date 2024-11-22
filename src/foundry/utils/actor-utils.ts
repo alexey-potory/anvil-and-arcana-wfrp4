@@ -1,5 +1,5 @@
-import { ActorDocument } from "../entities/actor-document";
-import { ItemDocument } from "../entities/item-document";
+import ActorDocument from "../entities/actor-document";
+import ItemDocument from "../entities/item-document";
 
 export default class ActorUtils {
     static getAvailableActors() : ActorDocument[] {
