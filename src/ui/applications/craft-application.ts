@@ -68,7 +68,11 @@ export class CraftApplication extends Application {
         };
     }
 
-    async _onItemAdd(event: OnDropEvent) {
+    render(force: boolean = false) {
+        super.render(force);
+    }
+
+    private async _onItemAdd(event: OnDropEvent) {
         event.preventDefault();
 
         const data = HtmlUtils.getDropEventData<DropEventData>(event);
@@ -94,7 +98,7 @@ export class CraftApplication extends Application {
         this.render(true);
     }
 
-    async _onItemRemove(event: OnTargetedEvent) {
+    private async _onItemRemove(event: OnTargetedEvent) {
         const index = HtmlUtils.getAttributeEventData<number>(event, "index");
 
         const item = this.items[index];
@@ -104,7 +108,7 @@ export class CraftApplication extends Application {
         this.render(true);
     }
 
-    async _onSubmit() {
+    private async _onSubmit() {
 
         if (!this._checkIfAllowed())
             return;
@@ -127,10 +131,10 @@ export class CraftApplication extends Application {
             return;
         }
 
-        
+
     }
 
-    _checkIfAllowed() : boolean {
+    private _checkIfAllowed() : boolean {
 
         const gmPresent = UserUtils.isActiveGMPresent();
         const allowedWithoutGM = SettingsUtils.get<boolean>('allowCraftWithoutGM');
@@ -143,7 +147,7 @@ export class CraftApplication extends Application {
         return true;
     }
 
-    async _chooseRecipe() : Promise<RecipeDocument | null> {
+    private async _chooseRecipe() : Promise<RecipeDocument | null> {
         const ids = this.items.map(item => ItemUtils.findPrototypeByName(item)._id);
 
         const searchHash = HashUtils.createSearchHash(ids);
@@ -171,7 +175,7 @@ export class CraftApplication extends Application {
         });
     }
 
-    async _chooseActor() : Promise<ActorDocument | null> {
+    private async _chooseActor() : Promise<ActorDocument | null> {
         const actors = ActorUtils.getAvailableActors();
 
         if (!actors || actors.length === 0) {
@@ -196,7 +200,7 @@ export class CraftApplication extends Application {
         return choice;
     }
 
-    async _performCheck(actor: ActorDocument, recipe: RecipeDocument) : Promise<number | undefined> {
+    private async _performCheck(actor: ActorDocument, recipe: RecipeDocument) : Promise<number | undefined> {
         const checkResult = await ActorUtils.performInstantCheck(actor,{
             skill: LocalizationUtils.localize(recipe.system.check.skill),
             modifier: recipe.system.check.simple.modifier,
@@ -213,9 +217,5 @@ export class CraftApplication extends Application {
         }
 
         return checkResult.SL;
-    }
-
-    render(force: boolean = false) {
-        super.render(force);
     }
 }

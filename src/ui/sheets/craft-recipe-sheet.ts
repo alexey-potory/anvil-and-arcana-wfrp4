@@ -84,7 +84,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         return data;
     }
 
-    _getRecipeCheck(data: any) : CraftRecipeCheck {
+    private _getRecipeCheck(data: any) : CraftRecipeCheck {
         return {
             selectedType: data.system.check.type,
             selectedSkill: data.system.check.skill,
@@ -101,12 +101,12 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         }
     }
 
-    _getRecipeComponents(data: any) : ItemDocument[] {
+    private _getRecipeComponents(data: any) : ItemDocument[] {
         const components: string[] = data.system.components;
         return components?.map(id => ItemUtils.getItem<ItemDocument>(id));
     }
 
-    _getRecipeResults(data: any) : CraftRecipeResults {
+    private _getRecipeResults(data: any) : CraftRecipeResults {
         const successId = data.system.results?.success;
         const failId = data.system.results?.fail;
 
@@ -116,7 +116,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         }
     }
 
-    async _onSuccessDrop(event: OnDropEvent) {
+    private async _onSuccessDrop(event: OnDropEvent) {
         event.preventDefault();
 
         const item = await this._getDropItem(event);
@@ -128,7 +128,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         await this._updateResult(ResultType.Success, item._id);
     }
 
-    async _onFailDrop(event: OnDropEvent) {
+    private async _onFailDrop(event: OnDropEvent) {
         event.preventDefault();
 
         const item = await this._getDropItem(event);
@@ -140,7 +140,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         await this._updateResult(ResultType.Fail, item._id);
     }
 
-    async _onComponentsDrop(event: OnDropEvent) {
+    private async _onComponentsDrop(event: OnDropEvent) {
 
         if (!this.currentData) {
             throw Error(LocalizationUtils.localize('...'));
@@ -160,15 +160,15 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         await this._updateComponents(components);
     }
 
-    async _onSuccessResultRemove() {
+    private async _onSuccessResultRemove() {
         await this._updateResult(ResultType.Success, '');
     }
 
-    async _onFailResultRemove() {
+    private async _onFailResultRemove() {
         await this._updateResult(ResultType.Fail, '');
     }
 
-    async _onComponentRemove(event: EventWithDataTarget) {
+    private async _onComponentRemove(event: EventWithDataTarget) {
 
         if (!this.currentData) {
             throw Error(LocalizationUtils.localize('...'));
@@ -181,7 +181,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         await this._updateComponents(components);
     }
 
-    async _getDropItem(event: OnDropEvent) : Promise<ItemDocument | undefined> {
+    private async _getDropItem(event: OnDropEvent) : Promise<ItemDocument | undefined> {
         const data = HtmlUtils.getDropEventData<DropEventData>(event);
 
         if (data.type !== 'Item') {
@@ -192,7 +192,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         return await DocumentUtils.getByUuid<ItemDocument>(data.uuid);
     }
 
-    async _updateResult(type: ResultType, value: string) {
+    private async _updateResult(type: ResultType, value: string) {
         if (!this.currentData) {
             throw Error(LocalizationUtils.localize('...'));
         }
@@ -200,7 +200,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         await ItemUtils.updateItem(this.currentData, `system.results.${type}`, value);
     }
 
-    async _updateComponents(components: string[]) {
+    private async _updateComponents(components: string[]) {
         if (!this.currentData) {
             throw Error(LocalizationUtils.localize('...'));
         }
