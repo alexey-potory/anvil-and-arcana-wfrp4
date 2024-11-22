@@ -110,8 +110,8 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         const failId = data.system.results?.fail;
 
         return {
-            success: ItemUtils.findItem(item => item._id === successId),
-            fail: ItemUtils.findItem(item => item._id === failId)
+            success: ItemUtils.find(item => item._id === successId),
+            fail: ItemUtils.find(item => item._id === failId)
         }
     }
 
@@ -188,7 +188,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
             return;
         }
 
-        return await DocumentUtils.getDocumentByUuid<ItemDocument>(data.uuid);
+        return await DocumentUtils.getByUuid<ItemDocument>(data.uuid);
     }
 
     async _updateResult(type: ResultType, value: string) {

@@ -19,7 +19,7 @@ export interface SettingConfig {
   }
   
 export default class SettingsUtils {
-    static registerSetting(settingName: string, options: SettingConfig) {
+    static register(settingName: string, options: SettingConfig) {
         //@ts-ignore
         game.settings.register(moduleName, settingName, options);
     }

@@ -1,4 +1,4 @@
-import { Contracts, recipeIconPath } from "../contracts";
+import { recipeIconPath } from "../contracts";
 import SchemaUtils from "../foundry/utils/schema-utils";
 import DocumentUtils from "../foundry/utils/document-utils";
 import SkillUtils from "../utils/skill-utils";
@@ -62,7 +62,7 @@ export class CraftRecipeModel extends BaseItemModel {
         const skills = SkillUtils.getModuleSkills();
         const skillKey = Object.keys(skills)[0];
 
-        DocumentUtils.updateDocumentSource(
+        DocumentUtils.updateSource(
             //@ts-ignore
             this.parent, {
                 system: {
@@ -84,7 +84,7 @@ export class CraftRecipeModel extends BaseItemModel {
     }
     
     _updateImage(path: string) {
-        DocumentUtils.updateDocumentSource(
+        DocumentUtils.updateSource(
             //@ts-ignore
             this.parent, {img : path}
         );

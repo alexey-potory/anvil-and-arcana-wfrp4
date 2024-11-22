@@ -11,7 +11,7 @@ export default class ItemUtils {
         await document.update({ [key]: value })
     }
 
-    static findItem<T>(func: FindPredicate) : T {
+    static find<T>(func: FindPredicate) : T {
         // @ts-ignore
         return game.items.find(func);
     }
@@ -26,12 +26,12 @@ export default class ItemUtils {
         return game.items.get(id);
     }
 
-    static findItemPrototypeByName<T>(sourceItem: T) : T {
+    static findPrototypeByName<T>(sourceItem: T) : T {
         // @ts-ignore
         return game.items.find(item => item.name === sourceItem.name);
     }
 
-    static filterItems<T>(func: FindPredicate) : T[] {
+    static filter<T>(func: FindPredicate) : T[] {
         // @ts-ignore
         return game.items.filter(func);
     }

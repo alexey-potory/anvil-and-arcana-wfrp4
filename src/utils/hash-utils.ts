@@ -1,5 +1,3 @@
-import { ItemDocument } from "../foundry/entities/item-document";
-
 export default class HashUtils {
     static createSearchHash(items: string[]) : number {
         const sorted = items.slice().sort((a, b) => {

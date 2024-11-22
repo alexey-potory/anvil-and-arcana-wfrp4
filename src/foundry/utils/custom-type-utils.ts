@@ -1,7 +1,7 @@
 import { Contracts } from "../../contracts";
 
 export default class CustomTypeUtils {
-    static registerCustomType(typeName: string, model: any, sheet: any) : void {
+    static register(typeName: string, model: any, sheet: any) : void {
 
         const typeDef = {
             [typeName]: model

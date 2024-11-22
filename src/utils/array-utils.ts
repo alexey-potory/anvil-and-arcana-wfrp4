@@ -1,5 +1,5 @@
 export default class ArrayUtils {
-    static areMatchingArrays<T>(arrayA: T[], arrayB: T[]){
+    static araMatching<T>(arrayA: T[], arrayB: T[]){
         if (arrayA.length !== arrayB.length) {
             return false;
         }

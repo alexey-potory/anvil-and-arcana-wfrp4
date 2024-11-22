@@ -12,7 +12,7 @@ HookUtils.onInit(() => {
 
     // Loading custom item types
 
-    CustomTypeUtils.registerCustomType(
+    CustomTypeUtils.register(
         `${moduleName}.recipe`,
         CraftRecipeModel,
         CraftRecipeSheet
@@ -36,7 +36,7 @@ HookUtils.onInit(() => {
 
     HandlebarsUtils.loadTemplates(templatePaths);
 
-    SettingsUtils.registerSetting('allowCraftWithoutGM',
+    SettingsUtils.register('allowCraftWithoutGM',
     {
         name: LocalizationUtils.localize('ANVIL_AND_ARCANA.Settings.AllowCraftWithoutGM.Name'),
         hint: LocalizationUtils.localize('ANVIL_AND_ARCANA.Settings.AllowCraftWithoutGM.Hint'),

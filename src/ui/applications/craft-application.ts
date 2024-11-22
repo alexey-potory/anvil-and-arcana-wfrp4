@@ -47,7 +47,7 @@ export class CraftApplication extends Application {
             ]
         };
 
-        return ObjectUtils.mergeObjects(super.defaultOptions, settings);
+        return ObjectUtils.merge(super.defaultOptions, settings);
     }
 
     activateListeners(html: any) {
@@ -76,7 +76,7 @@ export class CraftApplication extends Application {
             return NotificationUtils.warning(LocalizationUtils.localize('...'));
         }
 
-        const item = await DocumentUtils.getDocumentByUuid<ItemDocument>(data.uuid);
+        const item = await DocumentUtils.getByUuid<ItemDocument>(data.uuid);
 
         if (!item.parent) {
             // TODO: Commented for testing, uncomment on build
@@ -129,12 +129,12 @@ export class CraftApplication extends Application {
     }
 
     async _chooseRecipe() : Promise<RecipeDocument | null> {
-        const ids = this.items.map(item => ItemUtils.findItemPrototypeByName(item)._id);
+        const ids = this.items.map(item => ItemUtils.findPrototypeByName(item)._id);
 
         const searchHash = HashUtils.createSearchHash(ids);
 
         const matchingRecipes = ItemUtils.findBySearchHash<RecipeDocument>(searchHash)
-            .filter(recipe => ArrayUtils.areMatchingArrays(ids, recipe.system.components));
+            .filter(recipe => ArrayUtils.araMatching(ids, recipe.system.components));
 
         if (matchingRecipes.length === 0) {
             this.items = [];
