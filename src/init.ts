@@ -56,8 +56,19 @@ HookUtils.onInit(() => {
             scope: 'world',
             config: true,
             type: Boolean,
-            requiresReload: true,
+            requiresReload: false,
             default: false
+    });
+
+    SettingsUtils.register('destroyIfNoRelatedSkill',
+        {
+            name: LocalizationUtils.localize('ANVIL_AND_ARCANA.Settings.DestroyIfNoRelatedSkill.Name'),
+            hint: LocalizationUtils.localize('ANVIL_AND_ARCANA.Settings.DestroyIfNoRelatedSkill.Hint'),
+            scope: 'world',
+            config: true,
+            type: Boolean,
+            requiresReload: false,
+            default: true
     });
 
     SettingsUtils.register('extendedCheckFailDecrease',
@@ -67,7 +78,7 @@ HookUtils.onInit(() => {
             scope: 'world',
             config: true,
             type: Boolean,
-            requiresReload: true,
+            requiresReload: false,
             default: true
     });
 
