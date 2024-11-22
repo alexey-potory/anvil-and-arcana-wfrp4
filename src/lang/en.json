@@ -6,6 +6,9 @@
 
     "ANVIL_AND_ARCANA.Check.Type.Simple": "Simple",
     "ANVIL_AND_ARCANA.Check.Type.Extended": "Extended",
+    "ANVIL_AND_ARCANA.Check.Error.UnableToPerformCheck": "This character cannot perform the check. Please ensure they have the required skill.",
+
+    "ANVIL_AND_ARCANA.ExtendedCheck.Label": "Craft Check",
 
     "ANVIL_AND_ARCANA.Recipe.SelectedSkill": "Skill",
     "ANVIL_AND_ARCANA.Recipe.CheckTypeLabel": "Check Type",
@@ -24,9 +27,11 @@
     "ANVIL_AND_ARCANA.Chat.Speaker": "Crafting",
     "ANVIL_AND_ARCANA.Chat.Messages.BadRecipe": "These ingredients don't seem to create a meaningful combination. Perhaps try something different?",
     "ANVIL_AND_ARCANA.Chat.Messages.CheckPassed": "You've successfully completed the creation process.",
-    "ANVIL_AND_ARCANA.Chat.Messages.CheckFailed": "You feel like this recipe is correct, but maybe you're not skilled enough yet?",
+    "ANVIL_AND_ARCANA.Chat.Messages.CheckFailed": "You feel like this recipe is correct, but maybe it's just a bad luck?",
+    "ANVIL_AND_ARCANA.Chat.Messages.NoRelatedSkill": "This recipe seems correct, but you’re unable to join the components properly. It appears you lack the necessary skill to complete it.",
     "ANVIL_AND_ARCANA.Chat.Messages.SuccessItemReceived": "As a result, you've got an item",
     "ANVIL_AND_ARCANA.Chat.Messages.FailItemReceived": "As a result, you've got an item",
+    "ANVIL_AND_ARCANA.Chat.Messages.ExtendedCheck": "You can do it, but it will take some time. Perform the extended check to see how long it will take.",
 
     "ANVIL_AND_ARCANA.Dialogs.SelectRecipe.Header": "Select recipe",
     "ANVIL_AND_ARCANA.Dialogs.SelectRecipe.Submit": "OK",
@@ -36,8 +41,14 @@
     "ANVIL_AND_ARCANA.Dialogs.SelectActor.Submit": "OK",
     "ANVIL_AND_ARCANA.Dialogs.SelectActor.Cancel": "Cancel",
 
-    "ANVIL_AND_ARCANA.Errors.NoAvailableCharacter": "No available charcter present",
+    "ANVIL_AND_ARCANA.Errors.NoAvailableCharacter": "No available character present",
 
     "ANVIL_AND_ARCANA.Settings.AllowCraftWithoutGM.Name": "Allow craft without GM",
-    "ANVIL_AND_ARCANA.Settings.AllowCraftWithoutGM.Hint": "Allow players to create items via crafting system when GM is not present"
+    "ANVIL_AND_ARCANA.Settings.AllowCraftWithoutGM.Hint": "Allow players to create items via crafting system when GM is not present.",
+    "ANVIL_AND_ARCANA.Settings.AllowFallbackToCharacteristic.Name": "Allow Fallback to Characteristic",
+    "ANVIL_AND_ARCANA.Settings.AllowFallbackToCharacteristic.Hint": "Allow players to pass item crafting checks even without the related skill.",
+    "ANVIL_AND_ARCANA.Settings.DestroyIfNoRelatedSkill.Name": "Destroy Without Related Skill",
+    "ANVIL_AND_ARCANA.Settings.DestroyIfNoRelatedSkill.Hint": "Destroy crafting components if the character lacks the required skill to craft the recipe.",
+    "ANVIL_AND_ARCANA.Settings.ExtendedCheckFailDecrease.Name": "Decrease Progress on Failure",
+    "ANVIL_AND_ARCANA.Settings.ExtendedCheckFailDecrease.Hint": "Decreases crafting progress if the extended check fails."
 }

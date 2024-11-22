@@ -7,12 +7,24 @@ export default class ChatUtils {
     static init() {
         TemplateUtils.loadTemplates([
             `${modulePath}/templates/messages/bad-recipe-message.hbs`,
-            `${modulePath}/templates/messages/check-failed-message.hbs`
+            `${modulePath}/templates/messages/check-failed-message.hbs`,
+            `${modulePath}/templates/messages/no-related-skill-message.hbs`,
+            `${modulePath}/templates/messages/extended-check-message.hbs`
         ]);
     }
 
     static async postBadRecipeMessage() {
         await this.postMessage(await TemplateUtils.render(`${modulePath}/templates/messages/bad-recipe-message.hbs`));
+    }
+
+    static async postNoRelatedSkillMessage() {
+        await this.postMessage(await TemplateUtils.render(`${modulePath}/templates/messages/no-related-skill-message.hbs`));
+    }
+
+    static async postExtendedCheckMessage() {
+        await this.postMessage(await TemplateUtils.render(
+            `${modulePath}/templates/messages/extended-check-message.hbs`
+        ));
     }
 
     static async postSuccessMessage(resultUuid: string | undefined) {

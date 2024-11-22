@@ -8,10 +8,8 @@ import HtmlUtils from "../../foundry/utils/html-utils";
 import NotificationUtils from "../../foundry/utils/notification-utils";
 import LocalizationUtils from "../../foundry/utils/localization-utils";
 import ItemUtils from "../../foundry/utils/item-utils";
-import ActorUtils from "../../foundry/utils/actor-utils";
-import ChatUtils from "../../utils/chat-utils";
-import {CheckType} from "../../documents/recipe-document";
-import CraftService from "../../services/craft-service";
+import CraftService, {CraftStatus} from "../../services/craft-service";
+import SettingsUtils from "../../foundry/utils/settings-utils";
 
 // @ts-ignore
 export class CraftApplication extends Application {
@@ -103,32 +101,11 @@ export class CraftApplication extends Application {
     }
 
     private async _onSubmit() {
-        if (!CraftService.isCraftAllowed)
+        const result = await CraftService.craftFrom(this.items);
+
+        if (result === CraftStatus.NoRelatedSkill &&
+            !SettingsUtils.get<boolean>('destroyIfNoRelatedSkill')) {
             return;
-
-        const actor = await ActorUtils.getActor();
-
-        if (!actor)
-            return;
-
-        const recipe = await CraftService._chooseRecipe(this.items);
-
-        if (!recipe) {
-            await ChatUtils.postBadRecipeMessage();
-            this._clear();
-            return;
-        }
-
-        if (recipe.system.check.type === CheckType.Simple) {
-            const result = await CraftService._performInstantCheck(actor, recipe);
-
-            if (!result) {
-                return;
-            }
-
-            await CraftService._handleResult(actor, recipe, result);
-        } else {
-
         }
 
         this._clear();

@@ -8,6 +8,7 @@ import HandlebarsUtils from "./foundry/utils/template-utils";
 import SettingsUtils from "./foundry/utils/settings-utils";
 import LocalizationUtils from "./foundry/utils/localization-utils";
 import ChatUtils from "./utils/chat-utils";
+import CraftService from "./services/craft-service";
 
 HookUtils.onInit(() => {
 
@@ -48,6 +49,28 @@ HookUtils.onInit(() => {
         default: false
     });
 
+    SettingsUtils.register('allowFallbackToCharacteristic',
+        {
+            name: LocalizationUtils.localize('ANVIL_AND_ARCANA.Settings.AllowFallbackToCharacteristic.Name'),
+            hint: LocalizationUtils.localize('ANVIL_AND_ARCANA.Settings.AllowFallbackToCharacteristic.Hint'),
+            scope: 'world',
+            config: true,
+            type: Boolean,
+            requiresReload: true,
+            default: false
+    });
+
+    SettingsUtils.register('extendedCheckFailDecrease',
+        {
+            name: LocalizationUtils.localize('ANVIL_AND_ARCANA.Settings.ExtendedCheckFailDecrease.Name'),
+            hint: LocalizationUtils.localize('ANVIL_AND_ARCANA.Settings.ExtendedCheckFailDecrease.Hint'),
+            scope: 'world',
+            config: true,
+            type: Boolean,
+            requiresReload: true,
+            default: true
+    });
+
     ChatUtils.init();
 });
 
@@ -60,6 +83,9 @@ HookUtils.onReady(() => {
 
     const root: ModuleRoot = new ModuleRoot({
         crafting: new CraftApplication(),
+    }, {
+        onExtendedRoll: CraftService.handleExtendedRollCallback,
+        onExtendedDelete: CraftService.handleExtendedDeleteCallback
     });
 
     Contracts.root = root;

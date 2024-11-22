@@ -51,7 +51,7 @@ export default interface ItemDocument {
     name: string;
     type: string | ItemTypes;
     system: ItemDocumentSystem;
-    parent: any;
+    parent: ItemDocument | undefined;
     update(value: any): Promise<ItemDocument>;
     createEmbeddedDocuments(type: string, args: any[]): Promise<any>;
 }

@@ -16,7 +16,7 @@ export default interface RecipeDocument extends ItemDocument {
             }
             extended: {
                 difficulty: string;
-                sl: string;
+                sl: number;
             }
         },
         results: {

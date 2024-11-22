@@ -6,6 +6,9 @@ import DialogUtils from "../../utils/dialog-utils";
 import ItemDocument, {ItemTypes} from "../entities/item-document";
 import ObjectUtils from "./object-utils";
 import ItemUtils from "./item-utils";
+import {StringUtils} from "../../utils/string-utils";
+import {ExtendedCheckDocument} from "../entities/extended-check-document";
+import SettingsUtils from "./settings-utils";
 
 export interface CheckResult {
     succeeded: boolean;
@@ -16,6 +19,14 @@ export interface InstantCheckOptions {
     skill: string;
     fallbackStat?: Characteristics | undefined;
     modifier: number;
+}
+
+export interface ExtendedCheckOptions {
+    name: string;
+    sl: number;
+    skill: string;
+    difficulty: string;
+    fallbackStat?: Characteristics | undefined;
 }
 
 export enum Characteristics {
@@ -29,6 +40,10 @@ export enum Characteristics {
     Intelligence = 'int',
     Willpower = 'wp',
     Fellowship = 'fel'
+}
+
+export enum CheckError {
+    NoRelatedSkill
 }
 
 export default class ActorUtils {
@@ -89,15 +104,14 @@ export default class ActorUtils {
         return documents[0];
     }
 
-    static async performInstantCheck(actor: ActorDocument, options: InstantCheckOptions) : Promise<CheckResult | undefined> {
+    static hasSkill(actor: ActorDocument, skillId: string) : boolean {
+        const skillName = LocalizationUtils.localize(skillId);
+        return !!ActorUtils.findItem<SkillDocument>(actor, skillName, ItemTypes.Skill);
+    }
+
+    static async performInstantCheck(actor: ActorDocument, options: InstantCheckOptions) : Promise<CheckResult> {
 
         const skill = this.findItem<SkillDocument>(actor, options.skill, ItemTypes.Skill);
-
-        if (!skill && !options.fallbackStat) {
-            NotificationUtils.warning('This character cannot perform the check. Please ensure they have the required skill.');
-            return;
-        }
-
         const args = { fields: { modifier: options.modifier } };
 
         if (skill) {
@@ -115,7 +129,47 @@ export default class ActorUtils {
         throw Error('Unexpected error: Instant check could not be performed due to missing skill or fallback stat.');
     }
 
-    private static async _performRoll(test: ActorTest) : Promise<CheckResult | undefined> {
+    static async createExtendedCheck(actor: ActorDocument, options: ExtendedCheckOptions) : Promise<ExtendedCheckDocument> {
+
+        const skill = this.findItem<SkillDocument>(actor, options.skill, ItemTypes.Skill);
+
+        let test;
+
+        if (skill) {
+            test = LocalizationUtils.localize(options.skill);
+        } else {
+            test = LocalizationUtils.localize(`CHAR.${StringUtils.capitalizeFirstLetter(options.fallbackStat as string)}`);
+        }
+
+        const args = {
+            name: `${options.name}: ${test}`,
+            type: 'extendedTest',
+            system: {
+                SL: {
+                    target: options.sl
+                },
+                test: {
+                    value: test
+                },
+                failingDecreases: {
+                    value: SettingsUtils.get<boolean>('extendedCheckFailDecrease')
+                },
+                difficulty: {
+                    value: options.difficulty
+                },
+                completion: {
+                    value: 'remove'
+                }
+            }
+        };
+
+        const documents =
+            await actor.createEmbeddedDocuments("Item", [ args ]) as ExtendedCheckDocument[];
+
+        return documents[0];
+    }
+
+    private static async _performRoll(test: ActorTest) : Promise<CheckResult> {
         try {
             await test.roll();
         } catch (error: any) {
