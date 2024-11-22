@@ -1,18 +1,18 @@
 import { Contracts, moduleName, modulePath, ModuleRoot} from "./contracts";
-import { registerCustomType } from "./foundry/utils/custom-type-utils";
-import { onInitHook, onReadyHook } from "./foundry/utils/hooks-utils";
-import { localizeString } from "./foundry/utils/localization-utils";
-import { registerSetting } from "./foundry/utils/settings-utils";
-import { loadHandlebarsTemplates } from "./foundry/utils/template-utils";
 import { CraftRecipeModel } from "./models/craft-recipe-model";
 import { CraftApplication} from "./ui/applications/craft-application";
 import { CraftRecipeSheet } from "./ui/sheets/craft-recipe-sheet";
+import HookUtils from "./foundry/utils/hook-utils";
+import CustomTypeUtils from "./foundry/utils/custom-type-utils";
+import HandlebarsUtils from "./foundry/utils/template-utils";
+import SettingsUtils from "./foundry/utils/settings-utils";
+import LocalizationUtils from "./foundry/utils/localization-utils";
 
-onInitHook(() => {
+HookUtils.onInit(() => {
 
     // Loading custom item types
 
-    registerCustomType(
+    CustomTypeUtils.registerCustomType(
         `${moduleName}.recipe`,
         CraftRecipeModel,
         CraftRecipeSheet
@@ -34,12 +34,12 @@ onInitHook(() => {
         `${modulePath}/templates/dialogs/item-select.hbs`,
     ];
 
-    loadHandlebarsTemplates(templatePaths);
+    HandlebarsUtils.loadTemplates(templatePaths);
 
-    registerSetting('allowCraftWithoutGM', 
+    SettingsUtils.registerSetting('allowCraftWithoutGM',
     {
-        name: localizeString('ANVIL_AND_ARCANA.Settings.AllowCraftWithoutGM.Name'),
-        hint: localizeString('ANVIL_AND_ARCANA.Settings.AllowCraftWithoutGM.Hint'),
+        name: LocalizationUtils.localize('ANVIL_AND_ARCANA.Settings.AllowCraftWithoutGM.Name'),
+        hint: LocalizationUtils.localize('ANVIL_AND_ARCANA.Settings.AllowCraftWithoutGM.Hint'),
         scope: 'world',
         config: true,
         type: Boolean,
@@ -48,10 +48,9 @@ onInitHook(() => {
     });
 });
 
-onReadyHook(() => {
+HookUtils.onReady(() => {
 
-    // @ts-ignore
-    Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
+    HandlebarsUtils.register('ifEquals', function(arg1:any, arg2:any, options:any) {
         //@ts-ignore
         return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
     });

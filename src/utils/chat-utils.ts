@@ -1,18 +1,20 @@
 import { recipeIconPath } from "../contracts";
-import { localizeString } from "../foundry/utils/localization-utils";
+import LocalizationUtils from "../foundry/utils/localization-utils";
 
 const errorColor = '#ad0000';
 
-export async function postBadRecipeChatMessage() {
-    await postChatMessage(`<b style="color: ${errorColor}">${localizeString("ANVIL_AND_ARCANA.Chat.Messages.BadRecipe")}</b>`);
-}
+export default class ChatUtils {
+    static async postBadRecipeMessage() {
+        await this.postChatMessage(`<b style="color: ${errorColor}">${LocalizationUtils.localize("ANVIL_AND_ARCANA.Chat.Messages.BadRecipe")}</b>`);
+    }
 
-export async function postChatMessage(content: string) {
-    // @ts-ignore
-    await ChatMessage.create(
-        { 
-            content: content,
-            speaker: { alias: localizeString("ANVIL_AND_ARCANA.Chat.Speaker") },
-            flags: { img: recipeIconPath } 
-        });
+    static async postChatMessage(content: string) {
+        // @ts-ignore
+        await ChatMessage.create(
+            {
+                content: content,
+                speaker: { alias: LocalizationUtils.localize("ANVIL_AND_ARCANA.Chat.Speaker") },
+                flags: { img: recipeIconPath }
+            });
+    }
 }

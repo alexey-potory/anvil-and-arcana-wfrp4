@@ -1,23 +1,22 @@
-import { Contracts, modulePath } from "../../contracts";
-import { ActorDocument, InternalActor } from "../../foundry/entities/actor-document";
-import { ItemDocument, RecipeDocument } from "../../foundry/entities/item-document";
-import { DropEventData } from "../../foundry/events/drop-event-data";
-import { OnDropEvent } from "../../foundry/events/on-drop-event";
-import { OnTargetedEvent } from "../../foundry/events/on-target-event";
-import { findActorSkill, getAvailableActors } from "../../foundry/utils/actor-utils";
-import { performCheck as performInstantCheck, performExtendedCheck } from "../../foundry/utils/check-utils";
-import { getDocumentByUuid } from "../../foundry/utils/documents-utils";
-import { getAttributeEventData, getDropEventData } from "../../foundry/utils/event-utils";
-import { findBySearchHash, findItem, findItemPrototypeByName, updateItemCount } from "../../foundry/utils/items-utils";
-import { localizeString } from "../../foundry/utils/localization-utils";
-import { showWarning } from "../../foundry/utils/notifications-utils";
-import { mergeObjects } from "../../foundry/utils/objects-utils";
-import { settingValue } from "../../foundry/utils/settings-utils";
-import { isActiveGMPresent } from "../../foundry/utils/users-utils";
-import { areMatchingArrays } from "../../utils/array-utils";
-import { postBadRecipeChatMessage, postChatMessage } from "../../utils/chat-utils";
-import { itemChooseDialog } from "../../utils/dialog-utils";
-import { createSearchHash } from "../../utils/search-hashes-utils";
+import {modulePath} from "../../contracts";
+import {ActorDocument} from "../../foundry/entities/actor-document";
+import {ItemDocument, RecipeDocument} from "../../foundry/entities/item-document";
+import {DropEventData} from "../../foundry/events/drop-event-data";
+import {OnDropEvent} from "../../foundry/events/on-drop-event";
+import {OnTargetedEvent} from "../../foundry/events/on-target-event";
+import ObjectUtils from "../../foundry/utils/object-utils";
+import HtmlUtils from "../../foundry/utils/html-utils";
+import NotificationUtils from "../../foundry/utils/notification-utils";
+import LocalizationUtils from "../../foundry/utils/localization-utils";
+import DocumentUtils from "../../foundry/utils/document-utils";
+import ItemUtils from "../../foundry/utils/item-utils";
+import UserUtils from "../../foundry/utils/user-utils";
+import SettingsUtils from "../../foundry/utils/settings-utils";
+import ActorUtils from "../../foundry/utils/actor-utils";
+import ArrayUtils from "../../utils/array-utils";
+import HashUtils from "../../utils/hash-utils";
+import ChatUtils from "../../utils/chat-utils";
+import DialogUtils from "../../utils/dialog-utils";
 
 // @ts-ignore
 export class CraftApplication extends Application {
@@ -48,7 +47,7 @@ export class CraftApplication extends Application {
             ]
         };
 
-        return mergeObjects(super.defaultOptions, settings);
+        return ObjectUtils.mergeObjects(super.defaultOptions, settings);
     }
 
     activateListeners(html: any) {
@@ -71,13 +70,13 @@ export class CraftApplication extends Application {
     async _onItemAdd(event: OnDropEvent) {
         event.preventDefault();
 
-        const data = getDropEventData<DropEventData>(event);
+        const data = HtmlUtils.getDropEventData<DropEventData>(event);
 
         if (data.type !== 'Item') {
-            return showWarning(localizeString('...'));
+            return NotificationUtils.warning(LocalizationUtils.localize('...'));
         }
 
-        const item = await getDocumentByUuid<ItemDocument>(data.uuid);
+        const item = await DocumentUtils.getDocumentByUuid<ItemDocument>(data.uuid);
 
         if (!item.parent) {
             // TODO: Commented for testing, uncomment on build
@@ -85,9 +84,9 @@ export class CraftApplication extends Application {
         }
 
         if (item.system.quantity?.value > 0) {
-            await updateItemCount(item, item.system.quantity.value - 1);
+            await ItemUtils.updateItemCount(item, item.system.quantity.value - 1);
         } else {
-            return showWarning(localizeString('...'));
+            return NotificationUtils.warning(LocalizationUtils.localize('...'));
         }
 
         this.items.push(item);
@@ -95,10 +94,10 @@ export class CraftApplication extends Application {
     }
 
     async _onItemRemove(event: OnTargetedEvent) {
-        const index = getAttributeEventData<number>(event, "index");
+        const index = HtmlUtils.getAttributeEventData<number>(event, "index");
 
         const item = this.items[index];
-        await updateItemCount(item, item.system.quantity.value + 1);
+        await ItemUtils.updateItemCount(item, item.system.quantity.value + 1);
 
         this.items.splice(index, 1);
         this.render(true);
@@ -106,11 +105,11 @@ export class CraftApplication extends Application {
 
     async _onSubmit() {
 
-        const gmPresent = isActiveGMPresent();
-        const allowedWithoutGM = settingValue<boolean>('allowCraftWithoutGM');
+        const gmPresent = UserUtils.isActiveGMPresent();
+        const allowedWithoutGM = SettingsUtils.get<boolean>('allowCraftWithoutGM');
 
         if (!gmPresent && !allowedWithoutGM) {
-            return showWarning('...')
+            return NotificationUtils.warning('...')
         }
 
         const actor = await this._chooseActor();
@@ -118,27 +117,30 @@ export class CraftApplication extends Application {
         if (!actor) {
             return;
         }
-    
+
         const recipe = await this._chooseRecipe();
 
         if (!recipe) {
             return;
         }
 
-        const skill = actor.findSkill(localizeString(recipe.system.check.skill));
+
+        const skill = ActorUtils.getSkill(actor, recipe.system.check.skill);
     }
 
     async _chooseRecipe() : Promise<RecipeDocument | null> {
-        const ids = this.items.map(item => findItemPrototypeByName(item)._id);
+        const ids = this.items.map(item => ItemUtils.findItemPrototypeByName(item)._id);
 
-        const searchHash = createSearchHash(ids);
-        const matchingRecipes = findBySearchHash<RecipeDocument>(searchHash).filter(recipe => areMatchingArrays(ids, recipe.system.components));
+        const searchHash = HashUtils.createSearchHash(ids);
+
+        const matchingRecipes = ItemUtils.findBySearchHash<RecipeDocument>(searchHash)
+            .filter(recipe => ArrayUtils.areMatchingArrays(ids, recipe.system.components));
 
         if (matchingRecipes.length === 0) {
             this.items = [];
             this.render();
 
-            await postBadRecipeChatMessage();
+            await ChatUtils.postBadRecipeMessage();
             return null;
         }
 
@@ -146,39 +148,37 @@ export class CraftApplication extends Application {
             return matchingRecipes[0];
         }
 
-        const choice = await itemChooseDialog<RecipeDocument>({
-            title: localizeString('ANVIL_AND_ARCANA.Dialogs.SelectRecipe.Header'),
-            submitLabel: localizeString('ANVIL_AND_ARCANA.Dialogs.SelectRecipe.Submit'),
-            cancelLabel: localizeString('ANVIL_AND_ARCANA.Dialogs.SelectRecipe.Cancel'),
+        return await DialogUtils.itemChooseDialog<RecipeDocument>({
+            title: LocalizationUtils.localize('ANVIL_AND_ARCANA.Dialogs.SelectRecipe.Header'),
+            submitLabel: LocalizationUtils.localize('ANVIL_AND_ARCANA.Dialogs.SelectRecipe.Submit'),
+            cancelLabel: LocalizationUtils.localize('ANVIL_AND_ARCANA.Dialogs.SelectRecipe.Cancel'),
             items: matchingRecipes
         });
-
-        return choice;
     }
 
-    async _chooseActor() : Promise<InternalActor | null> {
-        const actors = getAvailableActors();
+    async _chooseActor() : Promise<ActorDocument | null> {
+        const actors = ActorUtils.getAvailableActors();
 
         if (!actors || actors.length === 0) {
-            showWarning(localizeString("ANVIL_AND_ARCANA.Errors.NoAvailableCharacter"))
+            NotificationUtils.warning(LocalizationUtils.localize("ANVIL_AND_ARCANA.Errors.NoAvailableCharacter"))
             return null;
         }
 
         if (actors.length === 1) {
-            return new InternalActor(actors[0]);
+            return actors[0];
         }
         
-        const choice = await itemChooseDialog<ActorDocument>({
-            title: localizeString('ANVIL_AND_ARCANA.Dialogs.SelectActor.Header'),
-            submitLabel: localizeString('ANVIL_AND_ARCANA.Dialogs.SelectActor.Submit'),
-            cancelLabel: localizeString('ANVIL_AND_ARCANA.Dialogs.SelectActor.Cancel'),
+        const choice = await DialogUtils.itemChooseDialog<ActorDocument>({
+            title: LocalizationUtils.localize('ANVIL_AND_ARCANA.Dialogs.SelectActor.Header'),
+            submitLabel: LocalizationUtils.localize('ANVIL_AND_ARCANA.Dialogs.SelectActor.Submit'),
+            cancelLabel: LocalizationUtils.localize('ANVIL_AND_ARCANA.Dialogs.SelectActor.Cancel'),
             items: actors
         });
 
         if (!choice)
             return null;
 
-        return new InternalActor(choice);
+        return choice;
     }
 
     render(force: boolean = false) {

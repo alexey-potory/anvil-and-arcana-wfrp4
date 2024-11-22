@@ -52,11 +52,10 @@ function moduleCopyPlugin() {
 
 export default defineConfig({
     plugins: [
-        fileMarkerPlugin(),
         moduleCopyPlugin()
     ],
     build: {
-        minify: false,
+        minify: 'terser',
         rollupOptions: {
             input: {
                 common: './src/init.ts',

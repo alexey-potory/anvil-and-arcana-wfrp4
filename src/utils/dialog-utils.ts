@@ -8,31 +8,33 @@ export interface ChooseDialogueOptions<T> {
     items: ItemDocument[]
 }
 
-export async function itemChooseDialog<T>(options: ChooseDialogueOptions<T>): Promise<T | null> {
-    
-    return new Promise(async (resolve) => {
-        //@ts-ignore
-        const content = await renderTemplate(`${modulePath}/templates/dialogs/item-select.hbs`, { items: options.items });
+export default class DialogUtils {
+    static async itemChooseDialog<T>(options: ChooseDialogueOptions<T>): Promise<T | null> {
 
-        //@ts-ignore
-        new Dialog({
-            title: options.title,
-            content,
-            buttons: {
-                ok: {
-                    label: options.submitLabel,
-                    //@ts-ignore
-                    callback: (html) => {
-                        const itemId = html.find("#item-select").val();
-                        resolve(options.items.find(item => item._id === itemId) as T);
+        return new Promise(async (resolve) => {
+            //@ts-ignore
+            const content = await renderTemplate(`${modulePath}/templates/dialogs/item-select.hbs`, { items: options.items });
+
+            //@ts-ignore
+            new Dialog({
+                title: options.title,
+                content,
+                buttons: {
+                    ok: {
+                        label: options.submitLabel,
+                        //@ts-ignore
+                        callback: (html) => {
+                            const itemId = html.find("#item-select").val();
+                            resolve(options.items.find(item => item._id === itemId) as T);
+                        }
+                    },
+                    cancel: {
+                        label: options.cancelLabel,
+                        callback: () => resolve(null)
                     }
                 },
-                cancel: {
-                    label: options.cancelLabel,
-                    callback: () => resolve(null)
-                }
-            },
-            default: "ok"
-        }).render(true);
-    });
+                default: "ok"
+            }).render(true);
+        });
+    }
 }

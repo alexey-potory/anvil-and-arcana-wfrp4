@@ -18,15 +18,16 @@ export interface SettingConfig {
     filePicker?: "audio" | "image" | "video" | "imagevideo" | "folder" | "font";
   }
   
+export default class SettingsUtils {
+    static registerSetting(settingName: string, options: SettingConfig) {
+        //@ts-ignore
+        game.settings.register(moduleName, settingName, options);
+    }
 
-export function registerSetting(settingName: string, options: SettingConfig) {
-    //@ts-ignore
-    game.settings.register(moduleName, settingName, options);
-}
+    static get<T>(settingName: string) : T {
+        //@ts-ignore
+        const settings:any = game.settings;
 
-export function settingValue<T>(settingName: string) : T {
-    //@ts-ignore
-    const settings:any = game.settings;
-    
-    return settings.get(moduleName, settingName)
+        return settings.get(moduleName, settingName)
+    }
 }

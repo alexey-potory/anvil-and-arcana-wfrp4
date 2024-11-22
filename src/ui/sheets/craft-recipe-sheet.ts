@@ -1,15 +1,14 @@
-import { Contracts, modulePath } from "../../contracts";
+import { modulePath } from "../../contracts";
 import { ItemDocument, RecipeDocument } from "../../foundry/entities/item-document";
 import { DropEventData } from "../../foundry/events/drop-event-data";
 import { OnDropEvent } from "../../foundry/events/on-drop-event";
-import { getDocumentByUuid } from "../../foundry/utils/documents-utils";
-import { getDropEventData } from "../../foundry/utils/event-utils";
-import { EventWithDataTarget, getDataAttribute } from "../../foundry/utils/html-utils";
-import { findItem, getItem, updateItem } from "../../foundry/utils/items-utils";
-import { localizeString } from "../../foundry/utils/localization-utils";
-import { showWarning } from "../../foundry/utils/notifications-utils";
-import { createSearchHash } from "../../utils/search-hashes-utils";
-import { getModuleSkills } from "../../utils/skills-utils";
+import HtmlUtils, { EventWithDataTarget } from "../../foundry/utils/html-utils";
+import SkillUtils from "../../utils/skill-utils";
+import LocalizationUtils from "../../foundry/utils/localization-utils";
+import ItemUtils from "../../foundry/utils/item-utils";
+import NotificationUtils from "../../foundry/utils/notification-utils";
+import DocumentUtils from "../../foundry/utils/document-utils";
+import HashUtils from "../../utils/hash-utils";
 
 enum ResultType {
     Fail = 'fail',
@@ -88,10 +87,10 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         return {
             selectedType: data.system.check.type,
             selectedSkill: data.system.check.skill,
-            skills: getModuleSkills(),
+            skills: SkillUtils.getModuleSkills(),
             checkTypes: {
-                Simple: localizeString("ANVIL_AND_ARCANA.Check.Type.Simple"),
-                Extended: localizeString("ANVIL_AND_ARCANA.Check.Type.Extended")
+                Simple: LocalizationUtils.localize("ANVIL_AND_ARCANA.Check.Type.Simple"),
+                Extended: LocalizationUtils.localize("ANVIL_AND_ARCANA.Check.Type.Extended")
             },
             extended: {
                 selectedDifficulty: data.system.check.extended.difficulty,
@@ -103,7 +102,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
 
     _getRecipeComponents(data: any) : ItemDocument[] {
         const components: string[] = data.system.components;
-        return components?.map(id => getItem<ItemDocument>(id));
+        return components?.map(id => ItemUtils.getItem<ItemDocument>(id));
     }
 
     _getRecipeResults(data: any) : CraftRecipeResults {
@@ -111,8 +110,8 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
         const failId = data.system.results?.fail;
 
         return {
-            success: findItem(item => item._id === successId),
-            fail: findItem(item => item._id === failId)
+            success: ItemUtils.findItem(item => item._id === successId),
+            fail: ItemUtils.findItem(item => item._id === failId)
         }
     }
 
@@ -143,7 +142,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
     async _onComponentsDrop(event: OnDropEvent) {
 
         if (!this.currentData) {
-            throw Error(localizeString('...'));
+            throw Error(LocalizationUtils.localize('...'));
         }
 
         event.preventDefault();
@@ -171,10 +170,10 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
     async _onComponentRemove(event: EventWithDataTarget) {
 
         if (!this.currentData) {
-            throw Error(localizeString('...'));
+            throw Error(LocalizationUtils.localize('...'));
         }
 
-        const index = Number(getDataAttribute(event, 'index'));
+        const index = Number(HtmlUtils.getDataAttribute(event, 'index'));
         const components = this.currentData.system.components || [];
 
         components.splice(index, 1);
@@ -182,36 +181,36 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
     }
 
     async _getDropItem(event: OnDropEvent) : Promise<ItemDocument | undefined> {
-        const data = getDropEventData<DropEventData>(event);
+        const data = HtmlUtils.getDropEventData<DropEventData>(event);
 
         if (data.type !== 'Item') {
-            showWarning(localizeString('...'));
+            NotificationUtils.warning(LocalizationUtils.localize('...'));
             return;
         }
 
-        return await getDocumentByUuid<ItemDocument>(data.uuid);
+        return await DocumentUtils.getDocumentByUuid<ItemDocument>(data.uuid);
     }
 
     async _updateResult(type: ResultType, value: string) {
         if (!this.currentData) {
-            throw Error(localizeString('...'));
+            throw Error(LocalizationUtils.localize('...'));
         }
 
-        await updateItem(this.currentData, `system.results.${type}`, value);
+        await ItemUtils.updateItem(this.currentData, `system.results.${type}`, value);
     }
 
     async _updateComponents(components: string[]) {
         if (!this.currentData) {
-            throw Error(localizeString('...'));
+            throw Error(LocalizationUtils.localize('...'));
         }
 
-        const searchHash = createSearchHash(components);
+        const searchHash = HashUtils.createSearchHash(components);
 
         const update = {
             searchHash,
             components
         };
         
-        await updateItem(this.currentData, "system", update);
+        await ItemUtils.updateItem(this.currentData, "system", update);
     }
 }

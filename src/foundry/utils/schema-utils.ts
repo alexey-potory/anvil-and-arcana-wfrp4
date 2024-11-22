@@ -1,4 +1,6 @@
-export function schemaFields() {
-    //@ts-ignore
-    return foundry.data.fields;
+export default class SchemaUtils {
+    static schemaFields() {
+        //@ts-ignore
+        return foundry.data.fields;
+    }
 }
