@@ -117,8 +117,11 @@ export class CraftApplication extends Application {
 
         const recipe = await this._chooseRecipe();
 
-        if (!recipe)
+        if (!recipe) {
+            await ChatUtils.postBadRecipeMessage();
+            this._clear();
             return;
+        }
 
         const checkResult = await this._performCheck(actor, recipe);
 
@@ -136,6 +139,8 @@ export class CraftApplication extends Application {
         } else {
             await this._handleInstantFail(actor, item);
         }
+
+        this._clear();
     }
 
     private _checkIfAllowed() : boolean {
@@ -156,10 +161,6 @@ export class CraftApplication extends Application {
         const matchingRecipes = RecipeUtils.getByComponents(this.items);
 
         if (matchingRecipes.length === 0) {
-            this.items = [];
-            this.render();
-
-            await ChatUtils.postBadRecipeMessage();
             return null;
         }
 
@@ -201,5 +202,10 @@ export class CraftApplication extends Application {
         const item = await ActorUtils.findOrCreateItem(actor, itemPrototype);
         await ItemUtils.updateItemCount(item, item.system.quantity.value + 1);
         return item.uuid;
+    }
+
+    private _clear() {
+        this.items = [];
+        this.render();
     }
 }
