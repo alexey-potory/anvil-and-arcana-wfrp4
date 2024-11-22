@@ -14,7 +14,7 @@ import SettingsUtils from "../../foundry/utils/settings-utils";
 import ActorUtils, {Characteristics, CheckResult} from "../../foundry/utils/actor-utils";
 import ChatUtils from "../../utils/chat-utils";
 import DialogUtils from "../../utils/dialog-utils";
-import RecipeDocument from "../../documents/recipe-document";
+import RecipeDocument, {CheckType} from "../../documents/recipe-document";
 import RecipeUtils from "../../utils/recipe-utils";
 
 // @ts-ignore
@@ -123,21 +123,14 @@ export class CraftApplication extends Application {
             return;
         }
 
-        const checkResult = await this._performCheck(actor, recipe);
+        if (recipe.system.check.type === CheckType.Simple) {
+            const result = await this._performInstantCheck(actor, recipe);
 
-        if (checkResult === undefined)
-            return;
+            if (!result) {
+                return;
+            }
 
-        const resultId = checkResult.succeeded ?
-            recipe.system.results.successUuid :
-            recipe.system.results.failUuid;
-
-        const item = await ItemUtils.getByUuid<ItemDocument>(resultId);
-
-        if (checkResult.succeeded) {
-            await this._handleInstantSuccess(actor, item);
-        } else {
-            await this._handleInstantFail(actor, item);
+            await this._handleResult(actor, recipe, result);
         }
 
         this._clear();
@@ -176,7 +169,8 @@ export class CraftApplication extends Application {
         });
     }
 
-    private async _performCheck(actor: ActorDocument, recipe: RecipeDocument) : Promise<CheckResult | undefined> {
+    private async _performInstantCheck(actor: ActorDocument, recipe: RecipeDocument) : Promise<CheckResult | undefined> {
+
         return await ActorUtils.performInstantCheck(actor,{
             skill: LocalizationUtils.localize(recipe.system.check.skill),
             modifier: recipe.system.check.simple.modifier,
@@ -184,17 +178,35 @@ export class CraftApplication extends Application {
         });
     }
 
-    private async _handleInstantSuccess(actor: ActorDocument, itemPrototype: ItemDocument | undefined) {
-        const resultUuid = await this._handleResultItem(actor, itemPrototype);
+    private async _performExtendedCheck() {
+
+    }
+
+    private async _handleResult(actor: ActorDocument, recipe: RecipeDocument, checkResult: CheckResult) {
+        const resultId = checkResult.succeeded ?
+            recipe.system.results.successUuid :
+            recipe.system.results.failUuid;
+
+        const item = await ItemUtils.getByUuid<ItemDocument>(resultId);
+
+        if (checkResult.succeeded) {
+            await this._handleSuccess(actor, item);
+        } else {
+            await this._handleFail(actor, item);
+        }
+    }
+
+    private async _handleSuccess(actor: ActorDocument, itemPrototype: ItemDocument | undefined) {
+        const resultUuid = await this._handleItemCreation(actor, itemPrototype);
         await ChatUtils.postSuccessMessage(resultUuid);
     }
 
-    private async _handleInstantFail(actor: ActorDocument, itemPrototype: ItemDocument | undefined) {
-        const resultUuid = await this._handleResultItem(actor, itemPrototype);
+    private async _handleFail(actor: ActorDocument, itemPrototype: ItemDocument | undefined) {
+        const resultUuid = await this._handleItemCreation(actor, itemPrototype);
         await ChatUtils.postFailMessage(resultUuid);
     }
 
-    private async _handleResultItem(actor: ActorDocument, itemPrototype: ItemDocument | undefined) {
+    private async _handleItemCreation(actor: ActorDocument, itemPrototype: ItemDocument | undefined) {
         if (!itemPrototype) {
             return undefined;
         }

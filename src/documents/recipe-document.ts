@@ -1,11 +1,16 @@
 import ItemDocument, {ItemDocumentSystem} from "../foundry/entities/item-document";
 
+export enum CheckType {
+    Simple = 'Simple',
+    Extended = 'Extended'
+}
+
 export default interface RecipeDocument extends ItemDocument {
     system: ItemDocumentSystem & {
         componentsUuids: string[]
         check: {
             skill: string;
-            type: 'Simple' | 'Extended'
+            type: CheckType
             simple: {
                 modifier: number
             }
