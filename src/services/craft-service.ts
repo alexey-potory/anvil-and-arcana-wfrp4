@@ -41,7 +41,7 @@ export default class CraftService {
         return true;
     }
 
-    static async craftFrom(components: ItemDocument[]) : Promise<CraftStatus> {
+    static async craftFrom(components: ItemDocument[], skill: string | undefined) : Promise<CraftStatus> {
         if (!CraftService.isCraftAllowed)
             return CraftStatus.NoRelatedSkill;
 
@@ -50,7 +50,7 @@ export default class CraftService {
         if (!actor)
             return CraftStatus.NoRelatedSkill;
 
-        const recipe = await CraftService._chooseRecipe(components);
+        const recipe = await CraftService._chooseRecipe(components, skill);
 
         if (!recipe) {
             await ChatUtils.postBadRecipeMessage();
@@ -117,9 +117,13 @@ export default class CraftService {
         await CraftService._handleFail(actor, item);
     }
 
-    private static async _chooseRecipe(components: ItemDocument[]) : Promise<RecipeDocument | null> {
+    private static async _chooseRecipe(components: ItemDocument[], skill: string | undefined) : Promise<RecipeDocument | null> {
 
-        const matchingRecipes = RecipeUtils.getByComponents(components);
+        let matchingRecipes = RecipeUtils.getByComponents(components);
+
+        if (skill) {
+            matchingRecipes = matchingRecipes.filter(recipe => recipe.system.check.skill === skill);
+        }
 
         if (matchingRecipes.length === 0) {
             return null;
@@ -139,7 +143,7 @@ export default class CraftService {
 
     private static async _performInstantCheck(actor: ActorDocument, recipe: RecipeDocument) : Promise<CheckResult> {
         return await ActorUtils.performInstantCheck(actor,{
-            skill: LocalizationUtils.localize(recipe.system.check.skill),
+            skill: LocalizationUtils.localize(`ANVIL_AND_ARCANA.Skills.${recipe.system.check.skill}`),
             modifier: recipe.system.check.simple.modifier,
             fallbackStat: CraftService.defaultFallback
         });
@@ -149,7 +153,7 @@ export default class CraftService {
 
         const checkDocument = await ActorUtils.createExtendedCheck(actor, {
             name: LocalizationUtils.localize('ANVIL_AND_ARCANA.ExtendedCheck.Label'),
-            skill: recipe.system.check.skill,
+            skill: LocalizationUtils.localize(`ANVIL_AND_ARCANA.Skills.${recipe.system.check.skill}`),
             sl: recipe.system.check.extended.sl,
             difficulty: recipe.system.check.extended.difficulty,
             fallbackStat: CraftService.defaultFallback

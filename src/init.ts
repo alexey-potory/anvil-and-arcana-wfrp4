@@ -1,7 +1,7 @@
-import { Contracts, moduleName, modulePath, ModuleRoot} from "./contracts";
-import { CraftRecipeModel } from "./models/craft-recipe-model";
-import { CraftApplication} from "./ui/applications/craft-application";
-import { CraftRecipeSheet } from "./ui/sheets/craft-recipe-sheet";
+import {Contracts, moduleName, modulePath, ModuleRoot} from "./contracts";
+import {CraftRecipeModel} from "./models/craft-recipe-model";
+import {CraftApplication} from "./ui/applications/craft-application";
+import {CraftRecipeSheet} from "./ui/sheets/craft-recipe-sheet";
 import HookUtils from "./foundry/utils/hook-utils";
 import CustomTypeUtils from "./foundry/utils/custom-type-utils";
 import HandlebarsUtils from "./foundry/utils/template-utils";
@@ -92,13 +92,32 @@ HookUtils.onReady(() => {
         return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
     });
 
-    const root: ModuleRoot = new ModuleRoot({
-        crafting: new CraftApplication(),
+    const craftApplication = new CraftApplication();
+
+    Contracts.root = new ModuleRoot({
+        craftApplication: craftApplication,
+        openCraftApplication: openCraftApplication
     }, {
         onExtendedRoll: CraftService.handleExtendedRollCallback,
         onExtendedDelete: CraftService.handleExtendedDeleteCallback
     });
-
-    Contracts.root = root;
-    root.applications.crafting?.render(true);
 });
+
+async function openCraftApplication(instrument: string, skill: string) {
+    const window = Contracts.root.applications.craftApplication;
+
+    if (window.instrument !== instrument || window.skill !== skill) {
+        await window.close();
+
+        window.instrument = instrument;
+        window.skill = skill;
+    }
+
+    //@ts-ignore
+    if (window.rendered) {
+        //@ts-ignore
+        window.bringToTop();
+    } else {
+        window.render(true, {title: instrument});
+    }
+}

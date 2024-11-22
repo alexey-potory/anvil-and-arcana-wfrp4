@@ -104,9 +104,9 @@ export default class ActorUtils {
         return documents[0];
     }
 
-    static hasSkill(actor: ActorDocument, skillId: string) : boolean {
-        const skillName = LocalizationUtils.localize(skillId);
-        return !!ActorUtils.findItem<SkillDocument>(actor, skillName, ItemTypes.Skill);
+    static hasSkill(actor: ActorDocument, skill: string) : boolean {
+        const name = LocalizationUtils.localize(`ANVIL_AND_ARCANA.Skills.${skill}`);
+        return !!ActorUtils.findItem<SkillDocument>(actor, name, ItemTypes.Skill);
     }
 
     static async performInstantCheck(actor: ActorDocument, options: InstantCheckOptions) : Promise<CheckResult> {
@@ -136,7 +136,7 @@ export default class ActorUtils {
         let test;
 
         if (skill) {
-            test = LocalizationUtils.localize(options.skill);
+            test = options.skill
         } else {
             test = LocalizationUtils.localize(`CHAR.${StringUtils.capitalizeFirstLetter(options.fallbackStat as string)}`);
         }

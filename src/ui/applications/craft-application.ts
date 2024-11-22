@@ -15,10 +15,15 @@ import SettingsUtils from "../../foundry/utils/settings-utils";
 export class CraftApplication extends Application {
 
     items: ItemDocument[];
+    instrument?: string;
+    skill?: string;
 
     constructor(options = {}) {
         super();
+
         this.items = [];
+        this.instrument = undefined;
+        this.skill = undefined;
     }
 
     static get defaultOptions() {
@@ -60,8 +65,17 @@ export class CraftApplication extends Application {
         };
     }
 
-    render(force: boolean = false) {
-        super.render(force);
+    render(force: boolean = false, options = {}) {
+        super.render(force, options);
+    }
+
+    async close(options = {}) {
+        for (const item of this.items) {
+            await item.update({ "system.quantity.value": item.system.quantity.value + 1 });
+        }
+
+        this.items = [];
+        return super.close(options);
     }
 
     private async _onItemAdd(event: OnDropEvent) {
@@ -101,7 +115,7 @@ export class CraftApplication extends Application {
     }
 
     private async _onSubmit() {
-        const result = await CraftService.craftFrom(this.items);
+        const result = await CraftService.craftFrom(this.items, this.skill);
 
         if (result === CraftStatus.NoRelatedSkill &&
             !SettingsUtils.get<boolean>('destroyIfNoRelatedSkill')) {

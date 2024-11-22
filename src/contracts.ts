@@ -7,7 +7,8 @@ export const modulePath = `modules/${moduleName}`
 export const recipeIconPath = `${modulePath}/art/icons/craft-recipe-icon.png`
 
 export interface ModuleApplications {
-    crafting: CraftApplication;
+    craftApplication: CraftApplication;
+    openCraftApplication: (instrument: string, skill: string) => Promise<void>;
 }
 
 export interface ModuleTriggers {
