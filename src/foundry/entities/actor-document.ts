@@ -7,7 +7,7 @@ export interface ActorTest {
             SL: string
         }
     }
-    succeed: boolean;
+    succeeded: boolean;
 }
 
 export default interface ActorDocument extends ItemDocument {

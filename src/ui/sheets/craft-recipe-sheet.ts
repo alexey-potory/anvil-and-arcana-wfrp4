@@ -103,7 +103,7 @@ export class CraftRecipeSheet extends ItemSheetWfrp4e {
 
     private _getRecipeComponents(data: any) : ItemDocument[] {
         const components: string[] = data.system.components;
-        return components?.map(id => ItemUtils.getItem<ItemDocument>(id));
+        return components?.map(id => ItemUtils.get<ItemDocument>(id));
     }
 
     private _getRecipeResults(data: any) : CraftRecipeResults {

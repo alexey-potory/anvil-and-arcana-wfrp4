@@ -3,7 +3,7 @@ import SkillDocument from "../entities/skill-document";
 import NotificationUtils from "./notification-utils";
 
 export interface CheckResult {
-    succeed: boolean;
+    succeeded: boolean;
     SL: number;
 }
 
@@ -74,7 +74,7 @@ export default class ActorUtils {
         const sl = Number(test.data.result.SL);
         return {
             SL: sl,
-            succeed: test.succeed
+            succeeded: test.succeeded
         }
     }
 }

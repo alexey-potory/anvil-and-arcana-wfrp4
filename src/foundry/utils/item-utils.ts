@@ -21,7 +21,7 @@ export default class ItemUtils {
         return game.items.filter(item => item.system.searchHash === hash);
     }
 
-    static getItem<T>(id: string) : T {
+    static get<T>(id: string) : T {
         // @ts-ignore
         return game.items.get(id);
     }
