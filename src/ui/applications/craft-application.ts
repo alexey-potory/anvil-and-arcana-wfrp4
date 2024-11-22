@@ -12,7 +12,7 @@ import DocumentUtils from "../../foundry/utils/document-utils";
 import ItemUtils from "../../foundry/utils/item-utils";
 import UserUtils from "../../foundry/utils/user-utils";
 import SettingsUtils from "../../foundry/utils/settings-utils";
-import ActorUtils, {Characteristics} from "../../foundry/utils/actor-utils";
+import ActorUtils, {Characteristics, CheckResult} from "../../foundry/utils/actor-utils";
 import ArrayUtils from "../../utils/array-utils";
 import HashUtils from "../../utils/hash-utils";
 import ChatUtils from "../../utils/chat-utils";
@@ -127,11 +127,23 @@ export class CraftApplication extends Application {
 
         const checkResult = await this._performCheck(actor, recipe);
 
-        if (!checkResult) {
+        if (checkResult === undefined)
             return;
+
+        let resultId: string;
+
+        resultId = checkResult.succeeded ?
+            recipe.system.results.success :
+            recipe.system.results.fail;
+
+        const item = ItemUtils.get<ItemDocument>(resultId);
+
+        if (checkResult) {
+            // TODO: Success
+        } else {
+            // TODO: Fail
+            await ChatUtils.postCheckFailedMessage();
         }
-
-
     }
 
     private _checkIfAllowed() : boolean {
@@ -200,22 +212,11 @@ export class CraftApplication extends Application {
         return choice;
     }
 
-    private async _performCheck(actor: ActorDocument, recipe: RecipeDocument) : Promise<number | undefined> {
-        const checkResult = await ActorUtils.performInstantCheck(actor,{
+    private async _performCheck(actor: ActorDocument, recipe: RecipeDocument) : Promise<CheckResult | undefined> {
+        return await ActorUtils.performInstantCheck(actor,{
             skill: LocalizationUtils.localize(recipe.system.check.skill),
             modifier: recipe.system.check.simple.modifier,
             fallbackStat: Characteristics.Dexterity
         });
-
-        if (checkResult === undefined) {
-            return;
-        }
-
-        if (!checkResult.succeed) {
-            await ChatUtils.postCheckFailedMessage();
-            return;
-        }
-
-        return checkResult.SL;
     }
 }

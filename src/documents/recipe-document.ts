@@ -9,6 +9,10 @@ export default interface RecipeDocument extends ItemDocument {
             simple: {
                 modifier: number
             }
+        },
+        results: {
+            success: string
+            fail: string
         }
     };
 }
