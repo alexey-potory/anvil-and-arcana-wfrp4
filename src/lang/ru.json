@@ -1,7 +1,7 @@
 {
   "TYPES.Item.anvil-and-arcana-wfrp4.recipe": "Рецепт изготовления",
-  "ANVIL_AND_ARCANA.Skills.Alchemy": "Алхимия",
-  "ANVIL_AND_ARCANA.Skills.Apothecary": "Аптекарь",
+  "ANVIL_AND_ARCANA.Skills.Alchemy": "Ремесло (Алхимия)",
+  "ANVIL_AND_ARCANA.Skills.Apothecary": "Ремесло (Аптекарское дело)",
   "ANVIL_AND_ARCANA.Check.Type.Simple": "Обычная",
   "ANVIL_AND_ARCANA.Check.Type.Extended": "Расширенная",
   "ANVIL_AND_ARCANA.Check.Error.UnableToPerformCheck": "Этот персонаж не может выполнить проверку. Убедитесь, что у него есть необходимое умение.",

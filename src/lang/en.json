@@ -1,7 +1,7 @@
 {
   "TYPES.Item.anvil-and-arcana-wfrp4.recipe": "Crafting Recipe",
-  "ANVIL_AND_ARCANA.Skills.Alchemy": "Alchemy",
-  "ANVIL_AND_ARCANA.Skills.Apothecary": "Apothecary",
+  "ANVIL_AND_ARCANA.Skills.Alchemy": "Trade (Alchemy)",
+  "ANVIL_AND_ARCANA.Skills.Apothecary": "Trade (Apothecary)",
   "ANVIL_AND_ARCANA.Check.Type.Simple": "Simple",
   "ANVIL_AND_ARCANA.Check.Type.Extended": "Extended",
   "ANVIL_AND_ARCANA.Check.Error.UnableToPerformCheck": "This character cannot perform the check. Ensure they have the required skill.",
